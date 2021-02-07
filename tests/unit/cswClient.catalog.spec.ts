@@ -1,4 +1,4 @@
-import { NEW_RECORD_XML, myRequestFailed, myRequestSuccess, getCswClient } from './cswClient.mock-config'
+import { NEW_RECORD_XML, myRequestFailed, myRequestSuccess, getCswClient } from './cswClient.mock-config';
 
 describe('CSW Client Catalog related', () => {
   afterEach(() => {
@@ -9,8 +9,9 @@ describe('CSW Client Catalog related', () => {
   describe('GetCapabilities()', () => {
     it('GetCapabilities():REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
-      await csw.GetCapabilities()
-        .then((data) => { })
+      await csw
+        .GetCapabilities()
+        .then((data) => {})
         .catch((error) => {
           expect(myRequestFailed).toHaveBeenCalled();
         });
@@ -25,22 +26,22 @@ describe('CSW Client Catalog related', () => {
             serviceProvider: {},
             operationsMetadata: {},
             filterCapabilities: {},
-          }
+          },
         };
       });
-      await csw.GetCapabilities()
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalled();
-          expect(xmlStringToJsonSpy).toHaveBeenCalled();
-        })
+      await csw.GetCapabilities().then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalled();
+        expect(xmlStringToJsonSpy).toHaveBeenCalled();
+      });
     });
   });
 
   describe('DescribeRecord()', () => {
     it('DescribeRecord():REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
-      await csw.DescribeRecord()
-        .then((data) => { })
+      await csw
+        .DescribeRecord()
+        .then((data) => {})
         .catch((error) => {
           expect(myRequestFailed).toHaveBeenCalledTimes(1);
         });
@@ -48,12 +49,11 @@ describe('CSW Client Catalog related', () => {
 
     it('DescribeRecord():RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => { });
-      await csw.DescribeRecord()
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalled();
-          expect(xmlStringToJsonSpy).toHaveBeenCalled();
-        })
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
+      await csw.DescribeRecord().then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalled();
+        expect(xmlStringToJsonSpy).toHaveBeenCalled();
+      });
     });
   });
 
@@ -61,8 +61,9 @@ describe('CSW Client Catalog related', () => {
     it('GetDomain():REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
       const domainProperty = 'title';
-      await csw.GetDomain(domainProperty)
-        .then((data) => { })
+      await csw
+        .GetDomain(domainProperty)
+        .then((data) => {})
         .catch((error) => {
           expect(myRequestFailed).toHaveBeenCalledTimes(1);
         });
@@ -70,21 +71,21 @@ describe('CSW Client Catalog related', () => {
 
     it('GetDomain():RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => { });
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
       const domainProperty = 'title';
-      await csw.GetDomain(domainProperty)
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalled();
-          expect(xmlStringToJsonSpy).toHaveBeenCalled();
-        })
+      await csw.GetDomain(domainProperty).then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalled();
+        expect(xmlStringToJsonSpy).toHaveBeenCalled();
+      });
     });
   });
 
   describe('GetRecords()', () => {
     it('GetRecords():REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
-      await csw.GetRecords(1, 10, {}, 'kukuschema')
-        .then((data) => { })
+      await csw
+        .GetRecords(1, 10, {}, 'kukuschema')
+        .then((data) => {})
         .catch((error) => {
           expect(myRequestFailed).toHaveBeenCalledTimes(1);
         });
@@ -92,23 +93,21 @@ describe('CSW Client Catalog related', () => {
 
     it('GetRecords():RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      await csw.GetRecords(1, 10, {}, 'kukuschema')
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalled();
-          expect(data).toBe('Value');
-        })
+      await csw.GetRecords(1, 10, {}, 'kukuschema').then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalled();
+        expect(data).toBe('Value');
+      });
     });
 
     it('GetRecords():RESOLVE with empty FILTER options', async () => {
       const csw = getCswClient(false);
       const opt = {
-        filter: []
+        filter: [],
       };
-      await csw.GetRecords(1, 10, opt, 'kukuschema')
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalled();
-          expect(data).toBe('Value');
-        })
+      await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalled();
+        expect(data).toBe('Value');
+      });
     });
 
     it('GetRecords():RESOLVE with meaningfull FILTER options', async () => {
@@ -122,19 +121,18 @@ describe('CSW Client Catalog related', () => {
               llon: 34.8076891807199,
               ulat: 31.913197,
               ulon: 34.810811,
-            }
+            },
           },
           {
             field: 'mcgc:name',
-            like: 'Rehovot'
-          }
-        ]
+            like: 'Rehovot',
+          },
+        ],
       };
-      await csw.GetRecords(1, 10, opt, 'kukuschema')
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalled();
-          expect(data).toBe('Value');
-        })
+      await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalled();
+        expect(data).toBe('Value');
+      });
     });
 
     it('GetRecords():RESOLVE with meaningfull FILTER & SORT options', async () => {
@@ -148,25 +146,24 @@ describe('CSW Client Catalog related', () => {
               llon: 34.8076891807199,
               ulat: 31.913197,
               ulon: 34.810811,
-            }
+            },
           },
           {
             field: 'mcgc:name',
-            like: 'Rehovot'
-          }
+            like: 'Rehovot',
+          },
         ],
         sort: [
           {
-            field: 'title', 
-            desc: false
-          }
-        ]
+            field: 'title',
+            desc: false,
+          },
+        ],
       };
-      await csw.GetRecords(1, 10, opt, 'kukuschema')
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalled();
-          expect(data).toBe('Value');
-        })
+      await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalled();
+        expect(data).toBe('Value');
+      });
     });
 
     it('GetRecords():RESOLVE with ALL FILTER options', async () => {
@@ -180,11 +177,11 @@ describe('CSW Client Catalog related', () => {
               llon: 34.8076891807199,
               ulat: 31.913197,
               ulon: 34.810811,
-            }
+            },
           },
           {
             field: 'mcgc:name',
-            like: 'Rehovot'
+            like: 'Rehovot',
           },
           {
             field: 'mcgc:name',
@@ -196,40 +193,39 @@ describe('CSW Client Catalog related', () => {
           },
           {
             field: 'mcgc:dummy',
-            gt: '4'
+            gt: '4',
           },
           {
             field: 'mcgc:dummy',
-            lt: '9'
+            lt: '9',
           },
           {
             field: 'mcgc:dummy',
-            gteq: '4'
+            gteq: '4',
           },
           {
             field: 'mcgc:dummy',
-            lteq: '9'
+            lteq: '9',
           },
           {
             field: 'mcgc:dummy',
-            in: ['14', '19'] as [string, string]
-          }
-        ]
+            in: ['14', '19'] as [string, string],
+          },
+        ],
       };
-      await csw.GetRecords(1, 10, opt, 'kukuschema')
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalled();
-          expect(data).toBe('Value');
-        })
+      await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalled();
+        expect(data).toBe('Value');
+      });
     });
-
   });
 
   describe('GetRecordsById()', () => {
     it('GetRecordsById([]):REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
-      await csw.GetRecordsById([])
-        .then((data) => { })
+      await csw
+        .GetRecordsById([])
+        .then((data) => {})
         .catch((error) => {
           expect(myRequestFailed).toHaveBeenCalledTimes(1);
         });
@@ -237,24 +233,22 @@ describe('CSW Client Catalog related', () => {
 
     it('GetRecordsById([ids]):RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => { });
-      await csw.GetRecordsById(['1', '2'])
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalledTimes(1);
-          expect(xmlStringToJsonSpy).toHaveBeenCalled();
-        })
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
+      await csw.GetRecordsById(['1', '2']).then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalledTimes(1);
+        expect(xmlStringToJsonSpy).toHaveBeenCalled();
+      });
     });
   });
 
   describe('InsertRecords()', () => {
     it('InsertRecords([records]):RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => { });
-      await csw.InsertRecords([])
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalledTimes(1);
-          expect(xmlStringToJsonSpy).toHaveBeenCalled();
-        })
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
+      await csw.InsertRecords([]).then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalledTimes(1);
+        expect(xmlStringToJsonSpy).toHaveBeenCalled();
+      });
     });
   });
 
@@ -262,19 +256,18 @@ describe('CSW Client Catalog related', () => {
     it('UpdateRecord(record):RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
       const record = csw.xmlStringToJson(NEW_RECORD_XML);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => { });
-      await csw.UpdateRecord(record)
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalledTimes(1);
-          expect(xmlStringToJsonSpy).toHaveBeenCalled();
-        })
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
+      await csw.UpdateRecord(record).then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalledTimes(1);
+        expect(xmlStringToJsonSpy).toHaveBeenCalled();
+      });
     });
   });
 
   describe('DeleteRecords()', () => {
     it('DeleteRecords(filter):RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => { });
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
       const filter = [
         {
           field: 'mcgc:dummy',
@@ -283,19 +276,17 @@ describe('CSW Client Catalog related', () => {
             llon: 34.8076891807199,
             ulat: 31.913197,
             ulon: 34.810811,
-          }
+          },
         },
         {
           field: 'mcgc:name',
-          like: 'Rehovot'
-        }
+          like: 'Rehovot',
+        },
       ];
-      await csw.DeleteRecords(filter)
-        .then((data) => {
-          expect(myRequestSuccess).toHaveBeenCalledTimes(1);
-          expect(xmlStringToJsonSpy).toHaveBeenCalled();
-        })
+      await csw.DeleteRecords(filter).then((data) => {
+        expect(myRequestSuccess).toHaveBeenCalledTimes(1);
+        expect(xmlStringToJsonSpy).toHaveBeenCalled();
+      });
     });
   });
-
 });

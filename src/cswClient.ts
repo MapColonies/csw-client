@@ -1,6 +1,6 @@
 import { FilterBuilder } from './filterBuilder';
 import { SortBuilder } from './sortBuilder';
-import { CSW_VERSION, DEFAUL_SCHEMAS, DEFAULT_NAMESPACES, DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS } from './defaults'
+import { CSW_VERSION, DEFAUL_SCHEMAS, DEFAULT_NAMESPACES, DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS } from './defaults';
 import { IRequestExecutor, ICSWConfig, IFilterField, ICapabilities, ISortField } from './models/interfaces';
 
 const Jsonix = require('jsonix').Jsonix;
@@ -26,7 +26,7 @@ export class CswClient {
     } else if (config.credentials !== undefined) {
       this.credentials = config.credentials;
     }
-    if (url.length === 0){
+    if (url.length === 0) {
       throw 'CSW server URL is missing!';
     }
     this.url = url;
@@ -34,7 +34,7 @@ export class CswClient {
 
     this._initJsonixContext(config);
     this._initContext();
-  };
+  }
 
   /**
    *
@@ -51,7 +51,7 @@ export class CswClient {
    * Harvest
    *
    * */
- 
+
   /**
    * Operation name: GetCapabilities
    *
@@ -69,19 +69,18 @@ export class CswClient {
         filterCapabilities: capabilities.filterCapabilities,
       });
     });
-  };
+  }
 
   /**
    * Operation name: DescribeRecord
    *
    */
   public DescribeRecord(): Promise<any> {
-    return this.requestExecutor(this.url + '&request=DescribeRecord', 'GET', {})
-      .then((resp) => {
-        const describeRecord = this.xmlStringToJson(resp.data);
-        return Promise.resolve(describeRecord);
-      });
-  };
+    return this.requestExecutor(this.url + '&request=DescribeRecord', 'GET', {}).then((resp) => {
+      const describeRecord = this.xmlStringToJson(resp.data);
+      return Promise.resolve(describeRecord);
+    });
+  }
 
   /**
    * Operation name: GetDomain
@@ -94,16 +93,16 @@ export class CswClient {
       const domain = this.xmlStringToJson(resp.data);
       return Promise.resolve(domain);
     });
-  };
+  }
 
   /**
    * Operation GetRecords
-   * @param {Integer} start        start index  
+   * @param {Integer} start        start index
    * @param {Integer} max          number of max records to return
    * @param {Object} opts          filter or/and sort
    * @param {String} outputSchema  xml schema of returned records
    */
-  public GetRecords(start: number, max: number, opts: {filter?: IFilterField[], sort?: ISortField[]}, outputSchema: string): Promise<any> {
+  public GetRecords(start: number, max: number, opts: { filter?: IFilterField[]; sort?: ISortField[] }, outputSchema: string): Promise<any> {
     opts = opts || {};
     let filter = null;
     let sort = null;
@@ -114,19 +113,17 @@ export class CswClient {
       if (this.defaultFilter) {
         filter.and(this.transformFilter(this.defaultFilter));
       }
-    }
-    else if (this.defaultFilter) {
+    } else if (this.defaultFilter) {
       filter = this.transformFilter(this.defaultFilter);
     }
-    
+
     // build sort
     if (opts.sort) {
       if (this.defaultSort) {
         opts.sort = opts.sort.concat(this.defaultSort);
       }
       sort = this.transformSort(opts.sort);
-    }
-    else if (this.defaultSort) {
+    } else if (this.defaultSort) {
       sort = this.transformSort(this.defaultSort);
     }
     // build csw query
@@ -135,7 +132,7 @@ export class CswClient {
     const getRecords = this._GetRecords(start, max, query, outputSchema);
     return this._httpPost(getRecords).then((resp) => {
       return Promise.resolve(resp.data);
-        
+
       // TODO: parse returned XML, currently mapcolonies schema not defined
       const json = this.xmlStringToJson(this._clearResponseXMLString(resp.data));
       const res = json['csw:GetRecordsResponse'];
@@ -163,11 +160,11 @@ export class CswClient {
       };
       Promise.resolve(tmp);
     });
-  };
+  }
 
   /**
    * Operation GetRecordsById
-   * @param {Integer[]} id_list        list of record ids to fetch  
+   * @param {Integer[]} id_list        list of record ids to fetch
    */
   public GetRecordsById(id_list: string[]) {
     const byIdAction = this._GetRecordsById(id_list);
@@ -175,11 +172,11 @@ export class CswClient {
     return this._httpPost(byIdAction).then((resp) => {
       return Promise.resolve(this.xmlStringToJson(resp.data));
     });
-  };
+  }
 
   /**
    * Operation InsertRecords
-   * @param {any[]} records        array of records to be inserted  
+   * @param {any[]} records        array of records to be inserted
    */
   public InsertRecords(records: any[]) {
     const transactionAction = this._Insert(records);
@@ -190,26 +187,26 @@ export class CswClient {
       // return Promise.resolve(insert);
       return Promise.resolve(this.xmlStringToJson(resp.data));
     });
-  };
+  }
 
   /**
    * Operation UpdateRecord
-   * @param {any} record        an updated record object to store   
+   * @param {any} record        an updated record object to store
    */
   public UpdateRecord(record: any) {
     const transactionAction = this._Update(record);
     const transaction = this._Transaction(transactionAction);
-    
+
     return this._httpPost(transaction).then((resp) => {
       // const update = this.xmlStringToJson(this._clearResponseXMLString(resp.data));
       // return Promise.resolve(update);
       return Promise.resolve(this.xmlStringToJson(resp.data));
     });
-  };
-  
+  }
+
   /**
    * Operation DeleteRecords
-   * @param {IFilterField[]} filters        delete records due to supplied filters   
+   * @param {IFilterField[]} filters        delete records due to supplied filters
    */
   public DeleteRecords(filters: IFilterField[]) {
     const transactionAction = this._Delete(this.transformFilter(filters));
@@ -220,23 +217,23 @@ export class CswClient {
       // return Promise.resolve(delete);
       return Promise.resolve(this.xmlStringToJson(resp.data));
     });
-  };
+  }
 
   /**
    * Converts a XML string to JSON
    * @param {String} xmlString to be converted
    */
-  public xmlStringToJson(xmlString: string){
+  public xmlStringToJson(xmlString: string) {
     return this.jsonnixContext.createUnmarshaller().unmarshalString(xmlString);
-  };
+  }
 
   /**
    * Converts a JSON to XML
-   * @param {any} json JSON to be converted due to configured schemas 
+   * @param {any} json JSON to be converted due to configured schemas
    */
   public jsonToXml(json: {}) {
     return this.jsonnixContext.createMarshaller().marshalDocument(json);
-  };
+  }
 
   /**
    * Converts a XML to JSON
@@ -244,7 +241,7 @@ export class CswClient {
    */
   public xmlToJson(xml: any) {
     return this.jsonnixContext.createUnmarshaller().unmarshalDocument(xml);
-  };
+  }
 
   /**
    * Converts  XML to string
@@ -252,9 +249,9 @@ export class CswClient {
    */
   public xmlToString(xml: any) {
     return xmlserializer.serializeToString(xml);
-  };
+  }
 
-  private _httpPost(obj: any): Promise<any>{
+  private _httpPost(obj: any): Promise<any> {
     // json -> xml
     const xml = this.jsonToXml(obj);
     const xmlBody = this.xmlToString(xml);
@@ -264,113 +261,112 @@ export class CswClient {
         'Content-Type': 'application/xml',
         'Content-Length': xmlBody.length,
       },
-      handleAs: 'xml'
-    }
+      handleAs: 'xml',
+    };
     return this.requestExecutor(this.url, 'POST', data);
   }
 
-  private _clearResponseXMLString(xmlString: string){
-    let retData = xmlString.replace('<!-- pycsw 2.7.dev0 -->','');
-    return retData.replace('<?xml version="1.0" encoding="UTF-8" standalone="no"?>','');
+  private _clearResponseXMLString(xmlString: string) {
+    let retData = xmlString.replace('<!-- pycsw 2.7.dev0 -->', '');
+    return retData.replace('<?xml version="1.0" encoding="UTF-8" standalone="no"?>', '');
   }
 
   private _initJsonixContext(config: ICSWConfig) {
-    this.jsonnixContext = new Jsonix.Context([
-      ...DEFAUL_SCHEMAS,
-      ...config.shemas
-    ], {
+    this.jsonnixContext = new Jsonix.Context([...DEFAUL_SCHEMAS, ...config.shemas], {
       namespacePrefixes: {
         ...DEFAULT_NAMESPACES.namespacePrefixes,
-        ...config.nameSpaces.namespacePrefixes  
+        ...config.nameSpaces.namespacePrefixes,
       },
-      mappingStyle: config.nameSpaces.mappingStyle ?? DEFAULT_NAMESPACES.mappingStyle
+      mappingStyle: config.nameSpaces.mappingStyle ?? DEFAULT_NAMESPACES.mappingStyle,
     });
-  };
+  }
 
   private _initContext() {
     this.propertiesMapping = {
       'dc:identifier': {
         property: 'id',
         type: 'value',
-        label: 'Id'
+        label: 'Id',
       },
       'dc:type': {
         property: 'type',
         type: 'value',
-        label: 'Type'
+        label: 'Type',
       },
       'dc:date': {
         property: 'date',
         type: 'value',
-        label: 'Date'
+        label: 'Date',
       },
       'dc:title': {
         property: 'title',
         type: 'value',
-        label: 'Titre'
+        label: 'Titre',
       },
       'dc:subject': {
         property: 'subjects',
         type: 'array',
-        label: 'Mots-clés'
+        label: 'Mots-clés',
       },
       'dct:abstract': {
         property: 'abstract',
         type: 'value',
-        label: 'Longue description'
+        label: 'Longue description',
       },
       'dc:description': {
         property: 'description',
         type: 'value',
-        label: 'Description'
+        label: 'Description',
       },
       'dc:rights': {
         property: 'rights',
         type: 'value',
-        label: 'Droits'
+        label: 'Droits',
       },
       'dc:language': {
         property: 'language',
         type: 'value',
-        label: 'Langue'
+        label: 'Langue',
       },
       'dc:source': {
         property: 'source',
         type: 'value',
-        label: 'Source'
+        label: 'Source',
       },
       'dct:references': {
         property: 'references',
         type: 'array',
         label: 'Liens',
-        protocolProperty: 'scheme'
-      }
+        protocolProperty: 'scheme',
+      },
     };
-    this.protocols = [{
-      protocol: 'ESRI:REST',
-      priority: 10,
-      config: {
-        type: 'AGS_DYNAMIC',
-        hasLegend: true,
-        alpha: 100,
-        toLoad: true,
-        visible: true,
-        identifiable: true
-      }
-    }, {
-      protocol: 'OGC:WMS',
-      config: {
-        type: 'WMS',
-        hasLegend: true,
-        alpha: 100,
-        toLoad: true,
-        visible: true,
-        identifiable: false,
-        wmsParameters: {}
-      }
-    }];
-  };
-
+    this.protocols = [
+      {
+        protocol: 'ESRI:REST',
+        priority: 10,
+        config: {
+          type: 'AGS_DYNAMIC',
+          hasLegend: true,
+          alpha: 100,
+          toLoad: true,
+          visible: true,
+          identifiable: true,
+        },
+      },
+      {
+        protocol: 'OGC:WMS',
+        config: {
+          type: 'WMS',
+          hasLegend: true,
+          alpha: 100,
+          toLoad: true,
+          visible: true,
+          identifiable: false,
+          wmsParameters: {},
+        },
+      },
+    ];
+  }
 
   private _mapServiceProperty(element: any, record: any, key: string, p: any) {
     if (p.type === 'value') {
@@ -378,19 +374,18 @@ export class CswClient {
         link: element[key].content[0],
         description: p.descriptionProperty ? element[key][p.descriptionProperty] : null,
         name: p.nameProperty ? element[key][p.nameProperty] : null,
-        protocol: p.protocolProperty ? element[key][p.protocolProperty] : null
+        protocol: p.protocolProperty ? element[key][p.protocolProperty] : null,
       };
-    }
-    else {
+    } else {
       record[p.property] = record[p.property] || [];
       record[p.property].push({
         link: element[key].content[0],
         description: p.descriptionProperty ? element[key][p.descriptionProperty] : null,
         name: p.nameProperty ? element[key][p.nameProperty] : null,
-        protocol: p.protocolProperty ? element[key][p.protocolProperty] : null
+        protocol: p.protocolProperty ? element[key][p.protocolProperty] : null,
       });
     }
-  };
+  }
 
   /**
    * Map a record CSW record according to interface standard
@@ -413,13 +408,12 @@ export class CswClient {
 
       if (p.type === 'value') {
         record[p.property] = element[key].content[0];
-      }
-      else {
+      } else {
         record[p.property] = record[p.property] || [];
         record[p.property].push(element[key].content[0]);
       }
     }
-  };
+  }
 
   private transformSort(sort: ISortField[]): any {
     const sortBuilder = new SortBuilder();
@@ -427,7 +421,7 @@ export class CswClient {
       sortBuilder.Sort(s.field, s.desc);
     });
     return sortBuilder;
-  };
+  }
 
   private transformFilter(filter: IFilterField[]): any {
     let toReturn: any = null;
@@ -435,65 +429,54 @@ export class CswClient {
       const filterBuilder = new FilterBuilder().PropertyName(f.field);
       if (f.like) {
         filterBuilder.isLike('%' + f.like + '%');
-      }
-      else if (f.eq) {
+      } else if (f.eq) {
         filterBuilder.isEqualTo(f.eq);
-      }
-      else if (f.neq) {
+      } else if (f.neq) {
         filterBuilder.isNotEqualTo(f.neq);
-      }
-      else if (f.gt) {
+      } else if (f.gt) {
         filterBuilder.isGreaterThan(f.gt);
-      }
-      else if (f.lt) {
+      } else if (f.lt) {
         filterBuilder.isLessThan(f.lt);
-      }
-      else if (f.gteq) {
+      } else if (f.gteq) {
         filterBuilder.isGreaterThanOrEqualTo(f.gteq);
-      }
-      else if (f.lteq) {
+      } else if (f.lteq) {
         filterBuilder.isLessThanOrEqualTo(f.lteq);
-      }
-      else if (f.in) {
+      } else if (f.in) {
         filterBuilder.isBetween(f.in[0], f.in[1]);
-      }
-      else if (f.bbox) {
+      } else if (f.bbox) {
         filterBuilder.BBOX(f.bbox.llat, f.bbox.llon, f.bbox.ulat, f.bbox.ulon);
       }
 
-
       if (toReturn == null) {
         toReturn = filterBuilder;
-      }
-      else {
+      } else {
         // concatenation of filtres (and the default)
         if (f.or) {
           toReturn.or(filterBuilder);
-        }
-        else {
+        } else {
           toReturn.and(filterBuilder);
         }
       }
     });
     return toReturn;
-  };
+  }
 
   private _GetCapabilities() {
     return {
       'csw:GetCapabilities': {
-        'TYPE_NAME': `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.GetCapabilitiesType`,
-        'service': 'CSW',
-        'acceptVersions': {
-          'TYPE_NAME': `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.OWS}.AcceptVersionsType`,
-          'version': [CSW_VERSION]
+        TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.GetCapabilitiesType`,
+        service: 'CSW',
+        acceptVersions: {
+          TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.OWS}.AcceptVersionsType`,
+          version: [CSW_VERSION],
         },
-        'acceptFormats': {
-          'TYPE_NAME': `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.OWS}.AcceptFormatsType`,
-          'outputFormat': ['application/xml']
-        }
-      }
+        acceptFormats: {
+          TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.OWS}.AcceptFormatsType`,
+          outputFormat: ['application/xml'],
+        },
+      },
     };
-  };
+  }
 
   private _Query(elementSetName: string, constraint?: any, sort?: any) {
     const tmp = {
@@ -501,7 +484,7 @@ export class CswClient {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.QueryType`,
         elementSetName: {
           TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.ElementSetNameType`,
-          value: elementSetName
+          value: elementSetName,
         },
         typeNames: [
           {
@@ -509,10 +492,10 @@ export class CswClient {
             localPart: 'Record',
             namespaceURI: `http://www.opengis.net/cat/csw/${CSW_VERSION}`,
             prefix: 'csw',
-            string: `{http://www.opengis.net/cat/csw/${CSW_VERSION}}csw:Record`
-          }
-        ]
-      }
+            string: `{http://www.opengis.net/cat/csw/${CSW_VERSION}}csw:Record`,
+          },
+        ],
+      },
     };
     if (constraint) {
       (tmp as any)['csw:Query'].constraint = constraint;
@@ -521,15 +504,15 @@ export class CswClient {
       (tmp as any)['csw:Query'].sortBy = sort;
     }
     return tmp;
-  };
+  }
 
   private _Constraint(filter: any) {
     return {
       TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.QueryConstraintType`,
       version: CSW_VERSION,
-      filter: filter
+      filter: filter,
     };
-  };
+  }
 
   private _GetRecords(startPosition: number, maxRecords: number, query: any, outputSchema: string) {
     const tmp = {
@@ -540,14 +523,14 @@ export class CswClient {
         maxRecords: maxRecords,
         resultType: 'results',
         service: 'CSW',
-        version: CSW_VERSION
-      }
+        version: CSW_VERSION,
+      },
     };
     if (outputSchema) {
       (tmp as any)['csw:GetRecords'].outputSchema = outputSchema;
     }
     return tmp;
-  };
+  }
 
   private _GetRecordsById(ids: string[]) {
     return {
@@ -555,14 +538,14 @@ export class CswClient {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.GetRecordByIdType`,
         elementSetName: {
           ObjectTYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.ElementSetNameType`,
-          value: 'full'
+          value: 'full',
         },
         id: ids,
         service: 'CSW',
-        version: CSW_VERSION
-      }
+        version: CSW_VERSION,
+      },
     };
-  };
+  }
 
   private _GetDomain(propertyName: string) {
     return {
@@ -570,46 +553,44 @@ export class CswClient {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.GetDomainType`,
         propertyName: propertyName,
         service: 'CSW',
-        version: CSW_VERSION
-      }
+        version: CSW_VERSION,
+      },
     };
-  };
-  
+  }
+
   private _Transaction = function (action: any) {
     return {
       'csw:Transaction': {
-        'TYPE_NAME': `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.TransactionType`,
+        TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.TransactionType`,
         insertOrUpdateOrDelete: [action],
         service: 'CSW',
-        version: CSW_VERSION
-      }
+        version: CSW_VERSION,
+      },
     };
   };
 
   private _Insert(records: any[]) {
     return {
-      'TYPE_NAME': `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.InsertType`,
-      any: records
+      TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.InsertType`,
+      any: records,
     };
-  };
-
+  }
 
   private _Update(record: any) {
     return {
-      'TYPE_NAME': `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.UpdateType`,
-      any: record
+      TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.UpdateType`,
+      any: record,
     };
-  };
+  }
 
-  private _Delete(filter:any) {
+  private _Delete(filter: any) {
     return {
-      'TYPE_NAME': `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.DeleteType`,
+      TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.DeleteType`,
       constraint: {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.QueryConstraintType`,
         filter: filter,
-        version: CSW_VERSION
-      }
+        version: CSW_VERSION,
+      },
     };
- 
-  };
+  }
 }

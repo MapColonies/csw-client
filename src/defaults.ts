@@ -10,17 +10,7 @@ const GML_3_1_1 = require('ogc-schemas').GML_3_1_1;
 
 export const CSW_VERSION = '2.0.2';
 
-export const DEFAUL_SCHEMAS = [
-  OWS_1_0_0,
-  DC_1_1,
-  DCT,
-  XLink_1_0,
-  SMIL_2_0,
-  SMIL_2_0_Language,
-  GML_3_1_1,
-  Filter_1_1_0,
-  CSW_2_0_2
-];
+export const DEFAUL_SCHEMAS = [OWS_1_0_0, DC_1_1, DCT, XLink_1_0, SMIL_2_0, SMIL_2_0_Language, GML_3_1_1, Filter_1_1_0, CSW_2_0_2];
 
 export const DEFAULT_NAMESPACES = {
   namespacePrefixes: {
@@ -28,15 +18,15 @@ export const DEFAULT_NAMESPACES = {
     'http://www.opengis.net/ogc': 'ogc',
     'http://www.opengis.net/gml': 'gml',
     'http://www.opengis.net/ows': 'ows',
-    'http://purl.org/dc/elements/1.1/':'dc',
-    'http://purl.org/dc/terms/':'dct',
+    'http://purl.org/dc/elements/1.1/': 'dc',
+    'http://purl.org/dc/terms/': 'dct',
   },
-  mappingStyle: 'simplified'
+  mappingStyle: 'simplified',
 };
 
 export const DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS = {
-  'CSW': 'CSW_2_0_2',
-  'OWS': 'OWS_1_0_0',
-  'FILTER': 'Filter_1_1_0',
-  'GML': 'GML_3_1_1'
-}
+  CSW: 'CSW_2_0_2',
+  OWS: 'OWS_1_0_0',
+  FILTER: 'Filter_1_1_0',
+  GML: 'GML_3_1_1',
+};

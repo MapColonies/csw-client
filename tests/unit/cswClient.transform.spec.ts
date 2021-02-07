@@ -1,31 +1,27 @@
-import {NEW_RECORD_XML, getCswClient} from './cswClient.mock-config'
+import { NEW_RECORD_XML, getCswClient } from './cswClient.mock-config';
 
 const JSON_TO_CONVERT = {
-  "ogc:SortBy": {
-    "TYPE_NAME": "Filter_1_1_0.SortByType",
-    "sortProperty": [
+  'ogc:SortBy': {
+    TYPE_NAME: 'Filter_1_1_0.SortByType',
+    sortProperty: [
       {
-        "TYPE_NAME": "Filter_1_1_0.SortPropertyType",
-        "propertyName": {
-          "TYPE_NAME": "Filter_1_1_0.PropertyNameType",
-          "content": [
-            "dc:title"
-          ]
+        TYPE_NAME: 'Filter_1_1_0.SortPropertyType',
+        propertyName: {
+          TYPE_NAME: 'Filter_1_1_0.PropertyNameType',
+          content: ['dc:title'],
         },
-        "sortOrder": "ASC"
+        sortOrder: 'ASC',
       },
       {
-        "TYPE_NAME": "Filter_1_1_0.SortPropertyType",
-        "propertyName": {
-          "TYPE_NAME": "Filter_1_1_0.PropertyNameType",
-          "content": [
-            "dc:dummy"
-          ]
+        TYPE_NAME: 'Filter_1_1_0.SortPropertyType',
+        propertyName: {
+          TYPE_NAME: 'Filter_1_1_0.PropertyNameType',
+          content: ['dc:dummy'],
         },
-        "sortOrder": "DESC"
-      }
-    ]
-  }
+        sortOrder: 'DESC',
+      },
+    ],
+  },
 };
 
 describe('CSW Client XML <--> JSON transformations', () => {
@@ -66,5 +62,4 @@ describe('CSW Client XML <--> JSON transformations', () => {
 
     expect(xmlString).toContain('<ogc:SortProperty>');
   });
-  
 });

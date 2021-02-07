@@ -1,18 +1,18 @@
-import { DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS } from './defaults'
+import { DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS } from './defaults';
 
 export class FilterBuilder {
-  private tmp?: {PropertyName: string};
+  private tmp?: { PropertyName: string };
 
   constructor() {
     (this as any)['ogc:Filter'] = {
-      TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.FilterType`
+      TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.FilterType`,
     };
-  };
+  }
 
   PropertyName(propertyName: string) {
-    this.tmp = {PropertyName: propertyName};
+    this.tmp = { PropertyName: propertyName };
     return this;
-  };
+  }
 
   isLike(value: any) {
     (this as any)['ogc:Filter'].comparisonOps = {
@@ -23,22 +23,22 @@ export class FilterBuilder {
         wildCard: '%',
         literal: {
           TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
-          content: [value]
+          content: [value],
         },
         propertyName: {
           TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
-          content: [this.tmp?.PropertyName]
-        }
-      }
+          content: [this.tmp?.PropertyName],
+        },
+      },
     };
     // Delete the tmp property to prevent jsonix fail.
     delete this.tmp;
     return this;
-  };
+  }
 
   isNull(value: any) {
     throw 'Not Implemented yet';
-  };
+  }
 
   isBetween(lowerValue: any, upperValue: any) {
     (this as any)['ogc:Filter'].comparisonOps = {
@@ -47,164 +47,182 @@ export class FilterBuilder {
         expression: {
           'ogc:PropertyName': {
             TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
-            content: [this.tmp?.PropertyName]
-          }
+            content: [this.tmp?.PropertyName],
+          },
         },
         lowerBoundary: {
           expression: {
             'ogc:Literal': {
               TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
-              content: [lowerValue]
-            }
-          }
+              content: [lowerValue],
+            },
+          },
         },
         upperBoundary: {
           expression: {
             'ogc:Literal': {
               TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
-              content: [upperValue]
-            }
-          }
-        }
-      }
+              content: [upperValue],
+            },
+          },
+        },
+      },
     };
     // Delete the tmp property to prevent jsonix fail.
     delete this.tmp;
     return this;
-  };
+  }
 
   isEqualTo(value: any) {
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsEqualTo': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsEqualTo`,
         matchCase: false,
-        expression: [{
-          'ogc:Literal': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
-            content: [value]
-          }
-        }, {
-          'ogc:PropertyName': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
-            content: [this.tmp?.PropertyName]
-          }
-        }]
-      }
+        expression: [
+          {
+            'ogc:Literal': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
+              content: [value],
+            },
+          },
+          {
+            'ogc:PropertyName': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
+              content: [this.tmp?.PropertyName],
+            },
+          },
+        ],
+      },
     };
     // Delete the tmp property to prevent jsonix fail.
     delete this.tmp;
     return this;
-  };
+  }
 
-  isLessThanOrEqualTo(value:any) {
+  isLessThanOrEqualTo(value: any) {
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsLessThanOrEqualTo': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsLessThanOrEqualTo`,
-        expression: [{
-          'ogc:Literal': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
-            content: [value]
-          }
-        }, {
-          'ogc:PropertyName': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
-            content: [this.tmp?.PropertyName]
-          }
-        }]
-      }
+        expression: [
+          {
+            'ogc:Literal': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
+              content: [value],
+            },
+          },
+          {
+            'ogc:PropertyName': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
+              content: [this.tmp?.PropertyName],
+            },
+          },
+        ],
+      },
     };
     // Delete the tmp property to prevent jsonix fail.
     delete this.tmp;
     return this;
-  };
+  }
 
   isGreaterThan(value: any) {
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsGreaterThan': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsGreaterThan`,
-        expression: [{
-          'ogc:Literal': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
-            content: [value]
-          }
-        }, {
-          'ogc:PropertyName': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
-            content: [this.tmp?.PropertyName]
-          }
-        }]
-      }
+        expression: [
+          {
+            'ogc:Literal': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
+              content: [value],
+            },
+          },
+          {
+            'ogc:PropertyName': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
+              content: [this.tmp?.PropertyName],
+            },
+          },
+        ],
+      },
     };
     // Delete the tmp property to prevent jsonix fail.
     delete this.tmp;
     return this;
-  };
+  }
 
   isLessThan(value: any) {
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsLessThan': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsLessThan`,
-        expression: [{
-          'ogc:Literal': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
-            content: [value]
-          }
-        }, {
-          'ogc:PropertyName': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
-            content: [this.tmp?.PropertyName]
-          }
-        }]
-      }
+        expression: [
+          {
+            'ogc:Literal': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
+              content: [value],
+            },
+          },
+          {
+            'ogc:PropertyName': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
+              content: [this.tmp?.PropertyName],
+            },
+          },
+        ],
+      },
     };
     // Delete the tmp property to prevent jsonix fail.
     delete this.tmp;
     return this;
-  };
+  }
 
   isGreaterThanOrEqualTo(value: any) {
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsGreaterThanOrEqualTo': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsGreaterThanOrEqualTo`,
-        expression: [{
-          'ogc:Literal': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
-            content: [value]
-          }
-        }, {
-          'ogc:PropertyName': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
-            content: [this.tmp?.PropertyName]
-          }
-        }]
-      }
+        expression: [
+          {
+            'ogc:Literal': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
+              content: [value],
+            },
+          },
+          {
+            'ogc:PropertyName': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
+              content: [this.tmp?.PropertyName],
+            },
+          },
+        ],
+      },
     };
     // Delete the tmp property to prevent jsonix fail.
     delete this.tmp;
     return this;
-  };
+  }
 
   isNotEqualTo(value: any) {
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsNotEqualTo': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsNotEqualTo`,
-        expression: [{
-          'ogc:Literal': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
-            content: [value]
-          }
-        }, {
-          'ogc:PropertyName': {
-            TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
-            content: [this.tmp?.PropertyName]
-          }
-        }]
-      }
+        expression: [
+          {
+            'ogc:Literal': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.LiteralType`,
+              content: [value],
+            },
+          },
+          {
+            'ogc:PropertyName': {
+              TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
+              content: [this.tmp?.PropertyName],
+            },
+          },
+        ],
+      },
     };
     // Delete the tmp property to prevent jsonix fail.
     delete this.tmp;
     return this;
-  };
+  }
 
   and(filter: any) {
     const filterInstance: any = (this as any)['ogc:Filter'];
@@ -212,9 +230,9 @@ export class FilterBuilder {
       //console.debug('The first And');
       filterInstance.logicOps = {
         'ogc:And': {
-          TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.BinaryLogicOpType`
+          TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.BinaryLogicOpType`,
           //comparisonOpsOrSpatialOpsOrLogicOps: []
-        }
+        },
       };
       /**
        *   TODO We need to check if the filter/operator is a
@@ -240,7 +258,7 @@ export class FilterBuilder {
       filterInstance.logicOps['ogc:And'].ops = filterInstance.logicOps['ogc:And'].ops.concat(filter._getPreviousOperator());
     }
     return this;
-  };
+  }
 
   or(filter: any) {
     const filterInstance: any = (this as any)['ogc:Filter'];
@@ -248,9 +266,9 @@ export class FilterBuilder {
       //console.debug('The first Or');
       filterInstance.logicOps = {
         'ogc:Or': {
-          TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.BinaryLogicOpType`
+          TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.BinaryLogicOpType`,
           //comparisonOpsOrSpatialOpsOrLogicOps: []
-        }
+        },
       };
       /**
        *   TODO We need to check if the filter/operator is a
@@ -275,11 +293,11 @@ export class FilterBuilder {
       filterInstance.logicOps['ogc:Or'].ops = filterInstance.logicOps['ogc:Or'].ops.concat(filter._getPreviousOperator());
     }
     return this;
-  };
+  }
 
   not(filter: any) {
     throw 'Not Implemented yet';
-  };
+  }
 
   BBOX(llat: number, llon: number, ulat: number, ulon: number, srsName?: string) {
     (this as any)['ogc:Filter'].spatialOps = {
@@ -290,24 +308,24 @@ export class FilterBuilder {
             TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.GML}.EnvelopeType`,
             lowerCorner: {
               TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.GML}.DirectPositionType`,
-              value: [llat, llon]
+              value: [llat, llon],
             },
             upperCorner: {
               TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.GML}.DirectPositionType`,
-              value: [ulat, ulon]
+              value: [ulat, ulon],
             },
             // srsName: srsName
-          }
+          },
         },
         propertyName: {
           TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyNameType`,
-          content: 'ows:BoundingBox'
-        }
-      }
+          content: 'ows:BoundingBox',
+        },
+      },
     };
     delete this.tmp;
     return this;
-  };
+  }
 
   private _getPreviousOperator() {
     let operator;
@@ -325,5 +343,5 @@ export class FilterBuilder {
       throw 'Not Implemented yet, another operators';
     }
     return operator;
-  };
-};
+  }
+}

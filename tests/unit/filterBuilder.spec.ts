@@ -13,9 +13,13 @@ describe('FilterBuilder related', () => {
     let filter: any = new FilterBuilder().PropertyName('dc:title').isLike('%water%');
     filter = filter.and(new FilterBuilder().PropertyName('dc:subject').isLike('%polution%'));
 
-    const andFilters = reduce(filter['ogc:Filter'].logicOps['ogc:And'].ops, (count, item: any) => {
-      return isObject(item['ogc:PropertyIsLike']) ? count+1 : count
-    }, 0);
+    const andFilters = reduce(
+      filter['ogc:Filter'].logicOps['ogc:And'].ops,
+      (count, item: any) => {
+        return isObject(item['ogc:PropertyIsLike']) ? count + 1 : count;
+      },
+      0
+    );
 
     expect(filter['ogc:Filter'].logicOps['ogc:And'].ops.length).toBe(andFilters);
   });
@@ -31,5 +35,4 @@ describe('FilterBuilder related', () => {
     expect(propBBOXIdx).toBeGreaterThanOrEqual(0);
     expect(propLikeIdx).toBeGreaterThanOrEqual(0);
   });
-
 });
