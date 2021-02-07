@@ -1,0 +1,71 @@
+{
+  "name": "@map-colonies/csw-client",
+  "version": "1.0.0",
+  "description": "TypeScript and JavaScript classes for osm elements",
+  "main": "./dist/index.js",
+  "scripts": {
+    "postinstall": "patch-package",
+    "test:unit": "jest --config=./tests/configurations/unit/jest.config.js --verbose",
+    "test:integration": "jest --config=./tests/configurations/integration/jest.config.js",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "prelint:fix": "npm run format:fix",
+    "prelint": "npm run format",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "release": "standard-version",
+    "test": "npm run test:unit && npm run test:integration",
+    "prebuild": "npm run clean",
+    "build": "tsc --project tsconfig.build.json",
+    "start": "npm run build && cd dist && node ./index.js",
+    "clean": "rimraf dist",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MapColonies/csw-client.git"
+  },
+  "author": "MapColonies",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MapColonies/csw-client/issues"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "homepage": "https://github.com/MapColonies/csw-client#readme",
+  "dependencies": {
+    "jsonix": "~2.3.2",
+    "ogc-schemas": "^2.6.1",
+    "patch-package": "^6.2.2",
+    "w3c-schemas": "^1.4.0",
+    "xmlserializer": "^0.6.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@map-colonies/eslint-config": "^2.0.0",
+    "@types/jest": "^26.0.19",
+    "@types/lodash": "^4.14.168",
+    "@types/node": "^14.14.12",
+    "axios": "^0.21.1",
+    "commitlint": "^11.0.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^7.8.1",
+    "husky": "^4.3.5",
+    "jest": "^26.6.3",
+    "jest-create-mock-instance": "^1.1.0",
+    "jest-html-reporters": "^2.1.2",
+    "lodash": "^4.17.20",
+    "prettier": "^2.2.1",
+    "standard-version": "^9.0.0",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.1.1",
+    "typescript": "^3.8.3"
+  }
+}

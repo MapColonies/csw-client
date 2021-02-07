@@ -1,0 +1,12 @@
+diff --git a/node_modules/jsonix/jsonix.js b/node_modules/jsonix/jsonix.js
+index d967c5a..98a61a0 100644
+--- a/node_modules/jsonix/jsonix.js
++++ b/node_modules/jsonix/jsonix.js
+@@ -779,6 +779,7 @@ Jsonix.Util.Ensure = {
+ 	},
+ 	ensureArray : function(value) {
+ 		if (!Jsonix.Util.Type.isArray(value)) {
++			if(value !== 'ows:BoundingBox') // ALEX
+ 			throw new Error('Argument [' + value + '] must be an array.');
+ 		}
+ 	},
