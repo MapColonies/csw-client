@@ -1,33 +1,37 @@
 import { FilterBuilder } from './filterBuilder';
 import { SortBuilder } from './sortBuilder';
 import { CSW_VERSION, DEFAUL_SCHEMAS, DEFAULT_NAMESPACES, DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS } from './defaults';
-import { IRequestExecutor, ICSWConfig, IFilterField, ICapabilities, ISortField } from './models/interfaces';
+import { IRequestExecutor, ICSWConfig, IFilterField, ICapabilities, ISortField, IResponse } from './models/interfaces';
 
-const Jsonix = require('jsonix').Jsonix;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/naming-convention */
+
+const BETWEEN_FILTER_TOOPLE_LENGTH = 2;
+// eslint-disable-next-line
+const jsonix = require('jsonix').Jsonix;
+// eslint-disable-next-line
 const xmlserializer = require('xmlserializer');
 
 export class CswClient {
-  version: string;
-  url: string;
-  credentials = {};
-  serviceProperty = 'dct:references';
-  jsonnixContext: any;
-  defaultFilter: any = null;
-  defaultSort: any = null;
-  propertiesMapping: any;
-  protocols: any[] = [];
-  requestExecutor: IRequestExecutor;
+  private readonly version: string;
+  private readonly url: string;
+  private readonly credentials = {};
+  private readonly serviceProperty = 'dct:references';
+  private jsonnixContext: any;
+  private readonly defaultFilter: any = null;
+  private readonly defaultSort: any = null;
+  private propertiesMapping: any;
+  private protocols: any[] = [];
+  private readonly requestExecutor: IRequestExecutor;
 
-  constructor(url: string, requestExecutor: IRequestExecutor, config: ICSWConfig) {
+  public constructor(url: string, requestExecutor: IRequestExecutor, config: ICSWConfig) {
     this.version = CSW_VERSION;
 
-    if (config == null) {
-      throw 'Missing Configuration! It is a must to CSW to know the profile';
-    } else if (config.credentials !== undefined) {
+    if (config.credentials !== undefined) {
       this.credentials = config.credentials;
     }
     if (url.length === 0) {
-      throw 'CSW server URL is missing!';
+      throw new Error('CSW server URL is missing!');
     }
     this.url = url;
     this.requestExecutor = requestExecutor;
@@ -56,16 +60,21 @@ export class CswClient {
    * Operation name: GetCapabilities
    *
    */
-  public GetCapabilities(): Promise<ICapabilities> {
+  public async GetCapabilities(): Promise<ICapabilities> {
     // creeate json by transformation XML
     const getCapabilities = this._GetCapabilities();
 
-    return this._httpPost(getCapabilities).then((resp) => {
+    return this._httpPost(getCapabilities).then(async (resp: IResponse) => {
+      // eslint-disable-next-line
       const capabilities = this.xmlStringToJson(resp.data)['csw:Capabilities'];
       return Promise.resolve({
+        // eslint-disable-next-line
         serviceIdentification: capabilities.serviceIdentification,
+        // eslint-disable-next-line
         serviceProvider: capabilities.serviceProvider,
+        // eslint-disable-next-line
         operationsMetadata: capabilities.operationsMetadata,
+        // eslint-disable-next-line
         filterCapabilities: capabilities.filterCapabilities,
       });
     });
@@ -75,8 +84,9 @@ export class CswClient {
    * Operation name: DescribeRecord
    *
    */
-  public DescribeRecord(): Promise<any> {
-    return this.requestExecutor(this.url + '&request=DescribeRecord', 'GET', {}).then((resp) => {
+  public async DescribeRecord(): Promise<any> {
+    return this.requestExecutor(this.url + '&request=DescribeRecord', 'GET', {}).then(async (resp: IResponse) => {
+      // eslint-disable-next-line
       const describeRecord = this.xmlStringToJson(resp.data);
       return Promise.resolve(describeRecord);
     });
@@ -86,10 +96,11 @@ export class CswClient {
    * Operation name: GetDomain
    * @param {String} propertyName        property name to extract a unique values for
    * */
-  public GetDomain(propertyName: string) {
+  public async GetDomain(propertyName: string): Promise<any> {
     const getdomainAction = this._GetDomain(propertyName);
 
-    return this._httpPost(getdomainAction).then((resp) => {
+    return this._httpPost(getdomainAction).then(async (resp: IResponse) => {
+      // eslint-disable-next-line
       const domain = this.xmlStringToJson(resp.data);
       return Promise.resolve(domain);
     });
@@ -102,38 +113,38 @@ export class CswClient {
    * @param {Object} opts          filter or/and sort
    * @param {String} outputSchema  xml schema of returned records
    */
-  public GetRecords(start: number, max: number, opts: { filter?: IFilterField[]; sort?: ISortField[] }, outputSchema: string): Promise<any> {
-    opts = opts || {};
-    let filter = null;
+  public async GetRecords(start: number, max: number, opts: { filter?: IFilterField[]; sort?: ISortField[] }, outputSchema: string): Promise<any> {
+    let filter: FilterBuilder | null = null;
     let sort = null;
 
     // build filters
     if (opts.filter) {
       filter = this.transformFilter(opts.filter);
-      if (this.defaultFilter) {
+      if (filter !== null && this.defaultFilter !== null) {
         filter.and(this.transformFilter(this.defaultFilter));
       }
-    } else if (this.defaultFilter) {
+    } else if (this.defaultFilter !== null) {
       filter = this.transformFilter(this.defaultFilter);
     }
 
     // build sort
     if (opts.sort) {
-      if (this.defaultSort) {
+      if (this.defaultSort !== null) {
         opts.sort = opts.sort.concat(this.defaultSort);
       }
       sort = this.transformSort(opts.sort);
-    } else if (this.defaultSort) {
+    } else if (this.defaultSort !== null) {
       sort = this.transformSort(this.defaultSort);
     }
     // build csw query
     const query = this._Query('full', filter ? this._Constraint(filter) : null, sort);
     // finalize request body
     const getRecords = this._GetRecords(start, max, query, outputSchema);
-    return this._httpPost(getRecords).then((resp) => {
+    return this._httpPost(getRecords).then(async (resp: IResponse) => {
       return Promise.resolve(resp.data);
 
       // TODO: parse returned XML, currently mapcolonies schema not defined
+      /*
       const json = this.xmlStringToJson(this._clearResponseXMLString(resp.data));
       const res = json['csw:GetRecordsResponse'];
       if (res == null) {
@@ -159,6 +170,7 @@ export class CswClient {
         }),
       };
       Promise.resolve(tmp);
+      */
     });
   }
 
@@ -166,10 +178,10 @@ export class CswClient {
    * Operation GetRecordsById
    * @param {Integer[]} id_list        list of record ids to fetch
    */
-  public GetRecordsById(id_list: string[]) {
+  public async GetRecordsById(id_list: string[]): Promise<any> {
     const byIdAction = this._GetRecordsById(id_list);
 
-    return this._httpPost(byIdAction).then((resp) => {
+    return this._httpPost(byIdAction).then(async (resp: IResponse) => {
       return Promise.resolve(this.xmlStringToJson(resp.data));
     });
   }
@@ -178,11 +190,11 @@ export class CswClient {
    * Operation InsertRecords
    * @param {any[]} records        array of records to be inserted
    */
-  public InsertRecords(records: any[]) {
+  public async InsertRecords(records: any[]): Promise<any> {
     const transactionAction = this._Insert(records);
     const transaction = this._Transaction(transactionAction);
 
-    return this._httpPost(transaction).then((resp) => {
+    return this._httpPost(transaction).then(async (resp: IResponse) => {
       // const insert = this.xmlStringToJson(this._clearResponseXMLString(resp.data));
       // return Promise.resolve(insert);
       return Promise.resolve(this.xmlStringToJson(resp.data));
@@ -193,11 +205,12 @@ export class CswClient {
    * Operation UpdateRecord
    * @param {any} record        an updated record object to store
    */
-  public UpdateRecord(record: any) {
+  // eslint-disable-next-line
+  public async UpdateRecord(record: any): Promise<any> {
     const transactionAction = this._Update(record);
     const transaction = this._Transaction(transactionAction);
 
-    return this._httpPost(transaction).then((resp) => {
+    return this._httpPost(transaction).then(async (resp: IResponse) => {
       // const update = this.xmlStringToJson(this._clearResponseXMLString(resp.data));
       // return Promise.resolve(update);
       return Promise.resolve(this.xmlStringToJson(resp.data));
@@ -208,11 +221,11 @@ export class CswClient {
    * Operation DeleteRecords
    * @param {IFilterField[]} filters        delete records due to supplied filters
    */
-  public DeleteRecords(filters: IFilterField[]) {
+  public async DeleteRecords(filters: IFilterField[]): Promise<any> {
     const transactionAction = this._Delete(this.transformFilter(filters));
     const transaction = this._Transaction(transactionAction);
 
-    return this._httpPost(transaction).then((resp) => {
+    return this._httpPost(transaction).then(async (resp: IResponse) => {
       // const delete = this.xmlStringToJson(this._clearResponseXMLString(resp.data));
       // return Promise.resolve(delete);
       return Promise.resolve(this.xmlStringToJson(resp.data));
@@ -223,7 +236,8 @@ export class CswClient {
    * Converts a XML string to JSON
    * @param {String} xmlString to be converted
    */
-  public xmlStringToJson(xmlString: string) {
+  public xmlStringToJson(xmlString: string): any {
+    // eslint-disable-next-line
     return this.jsonnixContext.createUnmarshaller().unmarshalString(xmlString);
   }
 
@@ -231,7 +245,9 @@ export class CswClient {
    * Converts a JSON to XML
    * @param {any} json JSON to be converted due to configured schemas
    */
-  public jsonToXml(json: {}) {
+  // eslint-disable-next-line
+  public jsonToXml(json: any): any {
+    // eslint-disable-next-line
     return this.jsonnixContext.createMarshaller().marshalDocument(json);
   }
 
@@ -239,7 +255,9 @@ export class CswClient {
    * Converts a XML to JSON
    * @param {Document } xml XML to be converted
    */
-  public xmlToJson(xml: any) {
+  // eslint-disable-next-line
+  public xmlToJson(xml: any): any {
+    // eslint-disable-next-line
     return this.jsonnixContext.createUnmarshaller().unmarshalDocument(xml);
   }
 
@@ -247,12 +265,15 @@ export class CswClient {
    * Converts  XML to string
    * @param xml XML to be converted
    */
-  public xmlToString(xml: any) {
+  // eslint-disable-next-line
+  public xmlToString(xml: any): string {
+    // eslint-disable-next-line
     return xmlserializer.serializeToString(xml);
   }
 
-  private _httpPost(obj: any): Promise<any> {
+  private async _httpPost(obj: any): Promise<any> {
     // json -> xml
+    // eslint-disable-next-line
     const xml = this.jsonToXml(obj);
     const xmlBody = this.xmlToString(xml);
     const data = {
@@ -266,13 +287,14 @@ export class CswClient {
     return this.requestExecutor(this.url, 'POST', data);
   }
 
-  private _clearResponseXMLString(xmlString: string) {
-    let retData = xmlString.replace('<!-- pycsw 2.7.dev0 -->', '');
+  private _clearResponseXMLString(xmlString: string): string {
+    const retData = xmlString.replace('<!-- pycsw 2.7.dev0 -->', '');
     return retData.replace('<?xml version="1.0" encoding="UTF-8" standalone="no"?>', '');
   }
 
-  private _initJsonixContext(config: ICSWConfig) {
-    this.jsonnixContext = new Jsonix.Context([...DEFAUL_SCHEMAS, ...config.shemas], {
+  private _initJsonixContext(config: ICSWConfig): void {
+    // eslint-disable-next-line
+    this.jsonnixContext = new jsonix.Context([...DEFAUL_SCHEMAS, ...config.shemas], {
       namespacePrefixes: {
         ...DEFAULT_NAMESPACES.namespacePrefixes,
         ...config.nameSpaces.namespacePrefixes,
@@ -281,7 +303,7 @@ export class CswClient {
     });
   }
 
-  private _initContext() {
+  private _initContext(): void {
     this.propertiesMapping = {
       'dc:identifier': {
         property: 'id',
@@ -340,6 +362,7 @@ export class CswClient {
         protocolProperty: 'scheme',
       },
     };
+
     this.protocols = [
       {
         protocol: 'ESRI:REST',
@@ -368,7 +391,8 @@ export class CswClient {
     ];
   }
 
-  private _mapServiceProperty(element: any, record: any, key: string, p: any) {
+  /* eslint-disable */
+  private _mapServiceProperty(element: any, record: any, key: string, p: any): void {
     if (p.type === 'value') {
       record[p.property] = {
         link: element[key].content[0],
@@ -390,7 +414,7 @@ export class CswClient {
   /**
    * Map a record CSW record according to interface standard
    */
-  private _mapRecordElement(element: any, record: any) {
+  private _mapRecordElement(element: any, record: any): void {
     for (const key in this.propertiesMapping) {
       if (element[key] === null) {
         continue;
@@ -414,36 +438,37 @@ export class CswClient {
       }
     }
   }
+  /* eslint-enable */
 
-  private transformSort(sort: ISortField[]): any {
+  private transformSort(sort: ISortField[]): SortBuilder {
     const sortBuilder = new SortBuilder();
-    sort.forEach((s: any) => {
+    sort.forEach((s: ISortField) => {
       sortBuilder.Sort(s.field, s.desc);
     });
     return sortBuilder;
   }
 
-  private transformFilter(filter: IFilterField[]): any {
-    let toReturn: any = null;
+  private transformFilter(filter: IFilterField[]): FilterBuilder | null {
+    let toReturn: FilterBuilder | null = null;
     filter.forEach((f: IFilterField) => {
       const filterBuilder = new FilterBuilder().PropertyName(f.field);
-      if (f.like) {
-        filterBuilder.isLike('%' + f.like + '%');
-      } else if (f.eq) {
+      if (f.like !== undefined) {
+        filterBuilder.isLike(`%${f.like}%`);
+      } else if (f.eq !== undefined) {
         filterBuilder.isEqualTo(f.eq);
-      } else if (f.neq) {
+      } else if (f.neq !== undefined) {
         filterBuilder.isNotEqualTo(f.neq);
-      } else if (f.gt) {
+      } else if (f.gt !== undefined) {
         filterBuilder.isGreaterThan(f.gt);
-      } else if (f.lt) {
+      } else if (f.lt !== undefined) {
         filterBuilder.isLessThan(f.lt);
-      } else if (f.gteq) {
+      } else if (f.gteq !== undefined) {
         filterBuilder.isGreaterThanOrEqualTo(f.gteq);
-      } else if (f.lteq) {
+      } else if (f.lteq !== undefined) {
         filterBuilder.isLessThanOrEqualTo(f.lteq);
-      } else if (f.in) {
+      } else if (f.in?.length === BETWEEN_FILTER_TOOPLE_LENGTH) {
         filterBuilder.isBetween(f.in[0], f.in[1]);
-      } else if (f.bbox) {
+      } else if (f.bbox !== undefined) {
         filterBuilder.BBOX(f.bbox.llat, f.bbox.llon, f.bbox.ulat, f.bbox.ulon);
       }
 
@@ -451,7 +476,8 @@ export class CswClient {
         toReturn = filterBuilder;
       } else {
         // concatenation of filtres (and the default)
-        if (f.or) {
+        // eslint-disable-next-line no-lonely-if
+        if (f.or === true) {
           toReturn.or(filterBuilder);
         } else {
           toReturn.and(filterBuilder);
@@ -461,6 +487,7 @@ export class CswClient {
     return toReturn;
   }
 
+  /* eslint-disable */
   private _GetCapabilities() {
     return {
       'csw:GetCapabilities': {
@@ -593,4 +620,5 @@ export class CswClient {
       },
     };
   }
+  /* eslint-enable */
 }

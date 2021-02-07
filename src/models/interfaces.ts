@@ -35,6 +35,10 @@ export interface IRequestExecutor {
   (url: string, method: string, params: Record<string, unknown>): Promise<any>;
 }
 
+export interface IResponse {
+  data: any;
+}
+
 export interface ICapabilities {
   serviceIdentification: any;
   serviceProvider: any;
