@@ -41,11 +41,9 @@ describe('CSW Client Catalog related', () => {
   describe('DescribeRecord()', () => {
     it('DescribeRecord():REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
-      await csw
-        .DescribeRecord()
-        .catch((error) => {
-          expect(myRequestFailed).toHaveBeenCalledTimes(1);
-        });
+      await csw.DescribeRecord().catch((error) => {
+        expect(myRequestFailed).toHaveBeenCalledTimes(1);
+      });
     });
 
     it('DescribeRecord():RESOLVE method invokes httpTransport function', async () => {
@@ -63,11 +61,9 @@ describe('CSW Client Catalog related', () => {
     it('GetDomain():REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
       const domainProperty = 'title';
-      await csw
-        .GetDomain(domainProperty)
-        .catch((error) => {
-          expect(myRequestFailed).toHaveBeenCalledTimes(1);
-        });
+      await csw.GetDomain(domainProperty).catch((error) => {
+        expect(myRequestFailed).toHaveBeenCalledTimes(1);
+      });
     });
 
     it('GetDomain():RESOLVE method invokes httpTransport function', async () => {
@@ -85,11 +81,9 @@ describe('CSW Client Catalog related', () => {
   describe('GetRecords()', () => {
     it('GetRecords():REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
-      await csw
-        .GetRecords(1, 10, {}, 'kukuschema')
-        .catch((error) => {
-          expect(myRequestFailed).toHaveBeenCalledTimes(1);
-        });
+      await csw.GetRecords(1, 10, {}, 'kukuschema').catch((error) => {
+        expect(myRequestFailed).toHaveBeenCalledTimes(1);
+      });
     });
 
     it('GetRecords():RESOLVE method invokes httpTransport function', async () => {
@@ -224,11 +218,9 @@ describe('CSW Client Catalog related', () => {
   describe('GetRecordsById()', () => {
     it('GetRecordsById([]):REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
-      await csw
-        .GetRecordsById([])
-        .catch((error) => {
-          expect(myRequestFailed).toHaveBeenCalledTimes(1);
-        });
+      await csw.GetRecordsById([]).catch((error) => {
+        expect(myRequestFailed).toHaveBeenCalledTimes(1);
+      });
     });
 
     it('GetRecordsById([ids]):RESOLVE method invokes httpTransport function', async () => {

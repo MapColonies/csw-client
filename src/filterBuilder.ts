@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */ 
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 import { DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS } from './defaults';
@@ -235,7 +235,7 @@ export class FilterBuilder {
   public and(filter: FilterBuilder | null): FilterBuilder {
     // eslint-disable-next-line
     const filterInstance: any = (this as any)['ogc:Filter'];
-    if(filter === null){
+    if (filter === null) {
       return this;
     }
 
@@ -276,7 +276,7 @@ export class FilterBuilder {
   public or(filter: FilterBuilder | null): FilterBuilder {
     // eslint-disable-next-line
     const filterInstance: any = (this as any)['ogc:Filter'];
-    if(filter === null){
+    if (filter === null) {
       return this;
     }
 

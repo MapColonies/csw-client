@@ -289,13 +289,17 @@ export const NEW_RECORD_XML = `
 
 // Mock/spy httpTransport function to avoid actual call and trace calls
 // eslint-disable-next-line
-export const myRequestFailed = jest.fn(async (url: string, method: string, params: Record<string, unknown>): Promise<any> => {
-  return Promise.reject('Value');
-});
+export const myRequestFailed = jest.fn(
+  async (url: string, method: string, params: Record<string, unknown>): Promise<any> => {
+    return Promise.reject('Value');
+  }
+);
 // eslint-disable-next-line
-export const myRequestSuccess = jest.fn(async (url: string, method: string, params: Record<string, unknown>): Promise<any> => {
-  return Promise.resolve({ data: 'Value' });
-});
+export const myRequestSuccess = jest.fn(
+  async (url: string, method: string, params: Record<string, unknown>): Promise<any> => {
+    return Promise.resolve({ data: 'Value' });
+  }
+);
 
 export const getCswClient = (isFailedRequest: boolean): CswClient => {
   const cswConfig = {
