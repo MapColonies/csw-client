@@ -1,5 +1,5 @@
 diff --git a/node_modules/jsonix/jsonix.js b/node_modules/jsonix/jsonix.js
-index d967c5a..98a61a0 100644
+index d967c5a..e2b3876 100644
 --- a/node_modules/jsonix/jsonix.js
 +++ b/node_modules/jsonix/jsonix.js
 @@ -779,6 +779,7 @@ Jsonix.Util.Ensure = {
@@ -10,3 +10,18 @@ index d967c5a..98a61a0 100644
  			throw new Error('Argument [' + value + '] must be an array.');
  		}
  	},
+@@ -6038,11 +6039,9 @@ Jsonix.Context = Jsonix
+ if (typeof require === 'function') {
+ 	// ... but the define function does not exists
+ 	if (typeof define !== 'function') {
+-		// Load the define function via amdefine
+-		var define = require('amdefine')(module);
+-		// If we're not in browser
+-		if (typeof window === 'undefined')
+-		{
++		if (!process.browser) {
++			// Load the define function via amdefine
++			define = require('amdefine')(module);
+ 			// Require xmldom, xmlhttprequest and fs
+ 			define(["xmldom", "xmlhttprequest", "fs"], _jsonix_factory);
+ 		}
