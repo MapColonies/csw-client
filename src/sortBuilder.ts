@@ -1,13 +1,14 @@
 import { DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS } from './defaults';
 
 export class SortBuilder {
-  constructor() {
+  /* eslint-disable */
+  public constructor() {
     (this as any)['ogc:SortBy'] = {
       TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.SortByType`,
     };
   }
 
-  Sort(propertyName: string, desc?: boolean) {
+  public Sort(propertyName: string, desc?: boolean): SortBuilder {
     const sortInstance = (this as any)['ogc:SortBy'];
     sortInstance.sortProperty = sortInstance.sortProperty || [];
     sortInstance.sortProperty.push({
@@ -20,4 +21,5 @@ export class SortBuilder {
     });
     return this;
   }
+  /* eslint-enable */
 }

@@ -1,5 +1,6 @@
 import { NEW_RECORD_XML, myRequestFailed, myRequestSuccess, getCswClient } from './cswClient.mock-config';
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 describe('CSW Client Catalog related', () => {
   afterEach(() => {
     // reset spy's
@@ -11,7 +12,7 @@ describe('CSW Client Catalog related', () => {
       const csw = getCswClient(true);
       await csw
         .GetCapabilities()
-        .then((data) => {})
+        // eslint-disable-next-line
         .catch((error) => {
           expect(myRequestFailed).toHaveBeenCalled();
         });
@@ -19,6 +20,7 @@ describe('CSW Client Catalog related', () => {
 
     it('GetCapabilities():RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
+      // eslint-disable-next-line
       const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {
         return {
           'csw:Capabilities': {
@@ -41,7 +43,6 @@ describe('CSW Client Catalog related', () => {
       const csw = getCswClient(true);
       await csw
         .DescribeRecord()
-        .then((data) => {})
         .catch((error) => {
           expect(myRequestFailed).toHaveBeenCalledTimes(1);
         });
@@ -49,7 +50,8 @@ describe('CSW Client Catalog related', () => {
 
     it('DescribeRecord():RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
+      // eslint-disable-next-line
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => ({}));
       await csw.DescribeRecord().then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
         expect(xmlStringToJsonSpy).toHaveBeenCalled();
@@ -63,7 +65,6 @@ describe('CSW Client Catalog related', () => {
       const domainProperty = 'title';
       await csw
         .GetDomain(domainProperty)
-        .then((data) => {})
         .catch((error) => {
           expect(myRequestFailed).toHaveBeenCalledTimes(1);
         });
@@ -71,7 +72,8 @@ describe('CSW Client Catalog related', () => {
 
     it('GetDomain():RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
+      // eslint-disable-next-line
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => ({}));
       const domainProperty = 'title';
       await csw.GetDomain(domainProperty).then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
@@ -85,7 +87,6 @@ describe('CSW Client Catalog related', () => {
       const csw = getCswClient(true);
       await csw
         .GetRecords(1, 10, {}, 'kukuschema')
-        .then((data) => {})
         .catch((error) => {
           expect(myRequestFailed).toHaveBeenCalledTimes(1);
         });
@@ -225,7 +226,6 @@ describe('CSW Client Catalog related', () => {
       const csw = getCswClient(true);
       await csw
         .GetRecordsById([])
-        .then((data) => {})
         .catch((error) => {
           expect(myRequestFailed).toHaveBeenCalledTimes(1);
         });
@@ -233,7 +233,8 @@ describe('CSW Client Catalog related', () => {
 
     it('GetRecordsById([ids]):RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
+      // eslint-disable-next-line
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => ({}));
       await csw.GetRecordsById(['1', '2']).then((data) => {
         expect(myRequestSuccess).toHaveBeenCalledTimes(1);
         expect(xmlStringToJsonSpy).toHaveBeenCalled();
@@ -244,7 +245,8 @@ describe('CSW Client Catalog related', () => {
   describe('InsertRecords()', () => {
     it('InsertRecords([records]):RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
+      // eslint-disable-next-line
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => ({}));
       await csw.InsertRecords([]).then((data) => {
         expect(myRequestSuccess).toHaveBeenCalledTimes(1);
         expect(xmlStringToJsonSpy).toHaveBeenCalled();
@@ -255,8 +257,10 @@ describe('CSW Client Catalog related', () => {
   describe('UpdateRecord()', () => {
     it('UpdateRecord(record):RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
+      // eslint-disable-next-line
       const record = csw.xmlStringToJson(NEW_RECORD_XML);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
+      // eslint-disable-next-line
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => ({}));
       await csw.UpdateRecord(record).then((data) => {
         expect(myRequestSuccess).toHaveBeenCalledTimes(1);
         expect(xmlStringToJsonSpy).toHaveBeenCalled();
@@ -267,7 +271,8 @@ describe('CSW Client Catalog related', () => {
   describe('DeleteRecords()', () => {
     it('DeleteRecords(filter):RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => {});
+      // eslint-disable-next-line
+      const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => ({}));
       const filter = [
         {
           field: 'mcgc:dummy',
@@ -290,3 +295,4 @@ describe('CSW Client Catalog related', () => {
     });
   });
 });
+/* eslint-enable */

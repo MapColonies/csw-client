@@ -1,6 +1,7 @@
-import { CswClient, ICapabilities } from '../../src';
 import Axios, { Method } from 'axios';
+import { CswClient, ICapabilities } from '../../src';
 
+/* eslint-disable */
 const ISO19139_GSS_20060504 = require('ogc-schemas').ISO19139_GSS_20060504;
 const ISO19139_GCO_20060504 = require('ogc-schemas').ISO19139_GCO_20060504;
 const ISO19139_GMD_20060504 = require('ogc-schemas').ISO19139_GMD_20060504;
@@ -9,6 +10,7 @@ const ISO19139_GTS_20060504 = require('ogc-schemas').ISO19139_GTS_20060504;
 const ISO19139_GSR_20060504 = require('ogc-schemas').ISO19139_GSR_20060504;
 const ISO19139_SRV_20060504 = require('ogc-schemas').ISO19139_SRV_20060504;
 const GML_3_2_0 = require('ogc-schemas').GML_3_2_0;
+/* eslint-enable */
 
 const NEW_RECORD_XML = `
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -286,7 +288,8 @@ const NEW_RECORD_XML = `
 </gmd:MD_Metadata>
 `;
 
-const myRequest = async (url: string, method: string, params: Record<string, unknown>) => {
+// eslint-disable-next-line
+const myRequest = async (url: string, method: string, params: Record<string, unknown>): Promise<any> => {
   const errorMsg = 'CLIENT HTTP ERROR BY AXIOS';
   return Axios.request({
     url,
@@ -375,6 +378,7 @@ describe('CSW Client', () => {
   it('GetRecordsById() method with fixed ids ["1","2", "5"]', async () => {
     const csw = getCswClient();
     await csw.GetRecordsById(['1', '2', '5']).then((data) => {
+      // eslint-disable-next-line
       expect(data['csw:GetRecordByIdResponse'].abstractRecord).toHaveLength(3);
     });
   });
@@ -382,6 +386,7 @@ describe('CSW Client', () => {
   it('GetDomain() method, bring all unique "title" values', async () => {
     const csw = getCswClient();
     await csw.GetDomain('title').then((data) => {
+      // eslint-disable-next-line
       expect(data['csw:GetDomainResponse'].domainValues).toHaveLength(1);
     });
   });

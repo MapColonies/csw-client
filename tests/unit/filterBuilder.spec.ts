@@ -1,6 +1,7 @@
-import { FilterBuilder } from '../../src';
 import { reduce, isObject, findIndex } from 'lodash';
+import { FilterBuilder } from '../../src/filterBuilder';
 
+/* eslint-disable */
 describe('FilterBuilder related', () => {
   it('Creation Filter Test', () => {
     const filter: any = new FilterBuilder().PropertyName('dc:title').isLike('%water%');
@@ -21,7 +22,7 @@ describe('FilterBuilder related', () => {
       0
     );
 
-    expect(filter['ogc:Filter'].logicOps['ogc:And'].ops.length).toBe(andFilters);
+    expect(filter['ogc:Filter'].logicOps['ogc:And'].ops).toHaveLength(andFilters);
   });
 
   it('isLike and BBOX Filter', () => {
@@ -31,8 +32,9 @@ describe('FilterBuilder related', () => {
     const propLikeIdx = findIndex(filter['ogc:Filter'].logicOps['ogc:And'].ops, (item: any) => isObject(item['ogc:PropertyIsLike']));
     const propBBOXIdx = findIndex(filter['ogc:Filter'].logicOps['ogc:And'].ops, (item: any) => isObject(item['ogc:BBOX']));
 
-    expect(filter['ogc:Filter'].logicOps['ogc:And'].ops.length).toBe(2);
+    expect(filter['ogc:Filter'].logicOps['ogc:And'].ops).toHaveLength(2);
     expect(propBBOXIdx).toBeGreaterThanOrEqual(0);
     expect(propLikeIdx).toBeGreaterThanOrEqual(0);
   });
 });
+/* eslint-enable */

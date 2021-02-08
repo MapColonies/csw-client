@@ -1,5 +1,6 @@
 import { NEW_RECORD_XML, getCswClient } from './cswClient.mock-config';
 
+/* eslint-disable */
 const JSON_TO_CONVERT = {
   'ogc:SortBy': {
     TYPE_NAME: 'Filter_1_1_0.SortByType',
@@ -23,6 +24,7 @@ const JSON_TO_CONVERT = {
     ],
   },
 };
+/* eslint-enable */
 
 describe('CSW Client XML <--> JSON transformations', () => {
   afterEach(() => {

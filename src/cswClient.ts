@@ -66,7 +66,7 @@ export class CswClient {
 
     return this._httpPost(getCapabilities).then(async (resp: IResponse) => {
       // eslint-disable-next-line
-      const capabilities = this.xmlStringToJson(resp.data)['csw:Capabilities'];
+      const capabilities = this.xmlStringToJson(resp.data)['csw:Capabilities'] as any;
       return Promise.resolve({
         // eslint-disable-next-line
         serviceIdentification: capabilities.serviceIdentification,
@@ -236,7 +236,7 @@ export class CswClient {
    * Converts a XML string to JSON
    * @param {String} xmlString to be converted
    */
-  public xmlStringToJson(xmlString: string): any {
+  public xmlStringToJson(xmlString: string): Record<string, unknown> {
     // eslint-disable-next-line
     return this.jsonnixContext.createUnmarshaller().unmarshalString(xmlString);
   }
@@ -246,7 +246,7 @@ export class CswClient {
    * @param {any} json JSON to be converted due to configured schemas
    */
   // eslint-disable-next-line
-  public jsonToXml(json: any): any {
+  public jsonToXml(json: any): XMLDocument {
     // eslint-disable-next-line
     return this.jsonnixContext.createMarshaller().marshalDocument(json);
   }
@@ -256,7 +256,7 @@ export class CswClient {
    * @param {Document } xml XML to be converted
    */
   // eslint-disable-next-line
-  public xmlToJson(xml: any): any {
+  public xmlToJson(xml: any): Record<string, unknown> {
     // eslint-disable-next-line
     return this.jsonnixContext.createUnmarshaller().unmarshalDocument(xml);
   }

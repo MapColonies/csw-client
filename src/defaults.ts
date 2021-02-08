@@ -1,3 +1,4 @@
+/* eslint-disable */
 const XLink_1_0 = require('w3c-schemas').XLink_1_0;
 const OWS_1_0_0 = require('ogc-schemas').OWS_1_0_0;
 const DC_1_1 = require('ogc-schemas').DC_1_1;
@@ -30,3 +31,4 @@ export const DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS = {
   FILTER: 'Filter_1_1_0',
   GML: 'GML_3_1_1',
 };
+/* eslint-enable */

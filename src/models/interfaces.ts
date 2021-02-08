@@ -1,10 +1,10 @@
 export interface ICSWConfig {
-  shemas: any[];
+  shemas: Record<string, unknown>[];
   nameSpaces: {
     namespacePrefixes: { [key: string]: string };
     mappingStyle?: string;
   };
-  credentials?: {};
+  credentials?: Record<string, unknown>;
 }
 
 export interface IFilterField {
@@ -32,16 +32,18 @@ export interface ISortField {
 }
 
 export interface IRequestExecutor {
+  // eslint-disable-next-line
   (url: string, method: string, params: Record<string, unknown>): Promise<any>;
 }
 
 export interface IResponse {
+  // eslint-disable-next-line
   data: any;
 }
 
 export interface ICapabilities {
-  serviceIdentification: any;
-  serviceProvider: any;
-  operationsMetadata: any;
-  filterCapabilities: any;
+  serviceIdentification: Record<string, unknown> | null;
+  serviceProvider: Record<string, unknown> | null;
+  operationsMetadata: Record<string, unknown> | null;
+  filterCapabilities: Record<string, unknown> | null;
 }

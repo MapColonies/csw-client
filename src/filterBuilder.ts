@@ -1,20 +1,25 @@
+/* eslint-disable @typescript-eslint/naming-convention */ 
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import { DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS } from './defaults';
 
 export class FilterBuilder {
   private tmp?: { PropertyName: string };
 
-  constructor() {
+  public constructor() {
+    // eslint-disable-next-line
     (this as any)['ogc:Filter'] = {
       TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.FilterType`,
     };
   }
 
-  PropertyName(propertyName: string) {
+  public PropertyName(propertyName: string): FilterBuilder {
     this.tmp = { PropertyName: propertyName };
     return this;
   }
 
-  isLike(value: any) {
+  public isLike(value: string): FilterBuilder {
+    // eslint-disable-next-line
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsLike': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsLikeType`,
@@ -36,11 +41,8 @@ export class FilterBuilder {
     return this;
   }
 
-  isNull(value: any) {
-    throw 'Not Implemented yet';
-  }
-
-  isBetween(lowerValue: any, upperValue: any) {
+  public isBetween(lowerValue: string, upperValue: string): FilterBuilder {
+    // eslint-disable-next-line
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsBetween': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsBetweenType`,
@@ -73,7 +75,8 @@ export class FilterBuilder {
     return this;
   }
 
-  isEqualTo(value: any) {
+  public isEqualTo(value: string): FilterBuilder {
+    // eslint-disable-next-line
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsEqualTo': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsEqualTo`,
@@ -99,7 +102,8 @@ export class FilterBuilder {
     return this;
   }
 
-  isLessThanOrEqualTo(value: any) {
+  public isLessThanOrEqualTo(value: string): FilterBuilder {
+    // eslint-disable-next-line
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsLessThanOrEqualTo': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsLessThanOrEqualTo`,
@@ -124,7 +128,8 @@ export class FilterBuilder {
     return this;
   }
 
-  isGreaterThan(value: any) {
+  public isGreaterThan(value: string): FilterBuilder {
+    // eslint-disable-next-line
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsGreaterThan': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsGreaterThan`,
@@ -149,7 +154,8 @@ export class FilterBuilder {
     return this;
   }
 
-  isLessThan(value: any) {
+  public isLessThan(value: string): FilterBuilder {
+    // eslint-disable-next-line
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsLessThan': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsLessThan`,
@@ -174,7 +180,8 @@ export class FilterBuilder {
     return this;
   }
 
-  isGreaterThanOrEqualTo(value: any) {
+  public isGreaterThanOrEqualTo(value: string): FilterBuilder {
+    // eslint-disable-next-line
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsGreaterThanOrEqualTo': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsGreaterThanOrEqualTo`,
@@ -199,7 +206,8 @@ export class FilterBuilder {
     return this;
   }
 
-  isNotEqualTo(value: any) {
+  public isNotEqualTo(value: string): FilterBuilder {
+    // eslint-disable-next-line
     (this as any)['ogc:Filter'].comparisonOps = {
       'ogc:PropertyIsNotEqualTo': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.PropertyIsNotEqualTo`,
@@ -224,10 +232,14 @@ export class FilterBuilder {
     return this;
   }
 
-  and(filter: any) {
+  public and(filter: FilterBuilder | null): FilterBuilder {
+    // eslint-disable-next-line
     const filterInstance: any = (this as any)['ogc:Filter'];
+    if(filter === null){
+      return this;
+    }
+
     if (typeof filterInstance.logicOps === 'undefined') {
-      //console.debug('The first And');
       filterInstance.logicOps = {
         'ogc:And': {
           TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.BinaryLogicOpType`,
@@ -244,24 +256,30 @@ export class FilterBuilder {
       if (typeof filterInstance.comparisonOps !== 'undefined') {
         // Only has one previous filter and it is a comparison operator.
         // Now is ops before was comparisonOpsOrSpatialOpsOrLogicOps
-        filterInstance.logicOps['ogc:And'].ops = [filterInstance.comparisonOps].concat(filter._getPreviousOperator());
+        filterInstance.logicOps['ogc:And'].ops = [filterInstance.comparisonOps].concat(filter.getPreviousOperator());
         delete filterInstance.comparisonOps;
       } else if (typeof filterInstance.spatialOps !== 'undefined') {
         // Only has one previous filter and it is a spatial operator.
-        filterInstance.logicOps['ogc:And'].ops = [filterInstance.spatialOps].concat(filter._getPreviousOperator());
+        filterInstance.logicOps['ogc:And'].ops = [filterInstance.spatialOps].concat(filter.getPreviousOperator());
         delete filterInstance.spatialOps;
       } else {
-        throw 'Not Implemented yet, another operators';
+        throw new Error('Not Implemented yet, another operators');
       }
     } else {
       // It has two or more previous operators. TODO They must be And Operator fix to accept 'ogc:Or'.
-      filterInstance.logicOps['ogc:And'].ops = filterInstance.logicOps['ogc:And'].ops.concat(filter._getPreviousOperator());
+      // eslint-disable-next-line
+      filterInstance.logicOps['ogc:And'].ops = filterInstance.logicOps['ogc:And'].ops.concat(filter.getPreviousOperator());
     }
     return this;
   }
 
-  or(filter: any) {
+  public or(filter: FilterBuilder | null): FilterBuilder {
+    // eslint-disable-next-line
     const filterInstance: any = (this as any)['ogc:Filter'];
+    if(filter === null){
+      return this;
+    }
+
     if (typeof filterInstance.logicOps === 'undefined') {
       //console.debug('The first Or');
       filterInstance.logicOps = {
@@ -279,27 +297,25 @@ export class FilterBuilder {
        */
       if (typeof filterInstance.comparisonOps !== 'undefined') {
         // Only has one previous filter and it is a comparison operator.
-        filterInstance.logicOps['ogc:Or'].ops = [filterInstance.comparisonOps].concat(filter._getPreviousOperator());
+        filterInstance.logicOps['ogc:Or'].ops = [filterInstance.comparisonOps].concat(filter.getPreviousOperator());
         delete filterInstance.comparisonOps;
       } else if (typeof filterInstance.spatialOps !== 'undefined') {
         // Only has one previous filter and it is a spatial operator.
-        filterInstance.logicOps['ogc:Or'].ops = [filterInstance.spatialOps].concat(filter._getPreviousOperator());
+        filterInstance.logicOps['ogc:Or'].ops = [filterInstance.spatialOps].concat(filter.getPreviousOperator());
         delete filterInstance.spatialOps;
       } else {
-        throw 'Not Implemented yet, another operators';
+        throw new Error('Not Implemented yet, another operators');
       }
     } else {
       // It has two or more previous operators. TODO They must be And Operator fix to accept 'ogc:And'.
-      filterInstance.logicOps['ogc:Or'].ops = filterInstance.logicOps['ogc:Or'].ops.concat(filter._getPreviousOperator());
+      // eslint-disable-next-line
+      filterInstance.logicOps['ogc:Or'].ops = filterInstance.logicOps['ogc:Or'].ops.concat(filter.getPreviousOperator());
     }
     return this;
   }
 
-  not(filter: any) {
-    throw 'Not Implemented yet';
-  }
-
-  BBOX(llat: number, llon: number, ulat: number, ulon: number, srsName?: string) {
+  public BBOX(llat: number, llon: number, ulat: number, ulon: number, srsName?: string): FilterBuilder {
+    // eslint-disable-next-line
     (this as any)['ogc:Filter'].spatialOps = {
       'ogc:BBOX': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.BBOXType`,
@@ -327,7 +343,16 @@ export class FilterBuilder {
     return this;
   }
 
-  private _getPreviousOperator() {
+  // public not(filter: FilterBuilder): void {
+  //   throw new Error('Not Implemented yet');
+  // }
+
+  // public isNull(value: string): void {
+  //   throw new Error('Not Implemented yet');
+  // }
+
+  /* eslint-disable */
+  private getPreviousOperator(): any {
     let operator;
     const filter = this as any;
     if (typeof filter['ogc:Filter'].comparisonOps !== 'undefined') {
@@ -339,9 +364,9 @@ export class FilterBuilder {
     } else if (typeof filter['ogc:Filter'].logicOps !== 'undefined') {
       operator = filter['ogc:Filter'].logicOps;
     } else {
-      console.error(filter);
-      throw 'Not Implemented yet, another operators';
+      throw new Error('Not Implemented yet, another operators');
     }
     return operator;
   }
+  /* eslint-enable */
 }

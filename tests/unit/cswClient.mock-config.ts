@@ -1,5 +1,6 @@
 import { CswClient } from '../../src';
 
+/* eslint-disable */
 const ISO19139_GSS_20060504 = require('ogc-schemas').ISO19139_GSS_20060504;
 const ISO19139_GCO_20060504 = require('ogc-schemas').ISO19139_GCO_20060504;
 const ISO19139_GMD_20060504 = require('ogc-schemas').ISO19139_GMD_20060504;
@@ -8,6 +9,7 @@ const ISO19139_GTS_20060504 = require('ogc-schemas').ISO19139_GTS_20060504;
 const ISO19139_GSR_20060504 = require('ogc-schemas').ISO19139_GSR_20060504;
 const ISO19139_SRV_20060504 = require('ogc-schemas').ISO19139_SRV_20060504;
 const GML_3_2_0 = require('ogc-schemas').GML_3_2_0;
+/* eslint-enable */
 
 export const NEW_RECORD_XML = `
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -286,15 +288,16 @@ export const NEW_RECORD_XML = `
 `;
 
 // Mock/spy httpTransport function to avoid actual call and trace calls
-export const myRequestFailed = jest.fn((url: string, method: string, params: Record<string, unknown>) => {
+// eslint-disable-next-line
+export const myRequestFailed = jest.fn(async (url: string, method: string, params: Record<string, unknown>): Promise<any> => {
   return Promise.reject('Value');
 });
-
-export const myRequestSuccess = jest.fn((url: string, method: string, params: Record<string, unknown>) => {
+// eslint-disable-next-line
+export const myRequestSuccess = jest.fn(async (url: string, method: string, params: Record<string, unknown>): Promise<any> => {
   return Promise.resolve({ data: 'Value' });
 });
 
-export const getCswClient = (isFailedRequest: boolean) => {
+export const getCswClient = (isFailedRequest: boolean): CswClient => {
   const cswConfig = {
     shemas: [
       GML_3_2_0,
