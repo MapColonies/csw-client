@@ -6,7 +6,7 @@ index d967c5a..e2b3876 100644
  	},
  	ensureArray : function(value) {
  		if (!Jsonix.Util.Type.isArray(value)) {
-+			if(value !== 'ows:BoundingBox') // ALEX
++			if(value !== 'ows:BoundingBox') // patched by @map-colonies/csw-client
  			throw new Error('Argument [' + value + '] must be an array.');
  		}
  	},
@@ -19,7 +19,7 @@ index d967c5a..e2b3876 100644
 -		// If we're not in browser
 -		if (typeof window === 'undefined')
 -		{
-+		if (!process.browser) {
++		if (!process.browser) { // patched by @map-colonies/csw-client
 +			// Load the define function via amdefine
 +			define = require('amdefine')(module);
  			// Require xmldom, xmlhttprequest and fs
