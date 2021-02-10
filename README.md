@@ -10,13 +10,35 @@ Suits for Node.JS and React/Angular applications
 Code samples are provided by TypeScript.
 ## Installation
 ### Install package by NPM
-   ```sh
-   npm install @map-colonies/csw-client --save
-   ```
+  ```sh
+  npm install @map-colonies/csw-client --save
+  ```
 ### Install package by YARN
-   ```sh
-   yarn add @map-colonies/csw-client --save
-   ```
+  ```sh
+  yarn add @map-colonies/csw-client --save
+  ```
+### **!!! IMPORTANT: Apply integrated PATCHES**
+  Add following **script** to your **package.json**
+  ```json
+  "scripts": {
+    .
+    .
+    .
+    "patch:deps": "cd ./node_modules/@map-colonies/csw-client && patch-package --patch-dir ./dist/patches"
+  }
+  ```
+  You can add **patch:deps script** to one of the **npm hooks** or run it manually.
+
+  For example add it to **postinstall hook**: 
+  ```json
+  "scripts": {
+    "postinstall": "yarn run patch:deps && <your_own_postinstall>",
+    .
+    .
+    .
+    "patch:deps": "cd ./node_modules/@map-colonies/csw-client && patch-package --patch-dir ./dist/patches"
+  }
+  ```
 ## Usage
   ```typescript
   // import CswClient class 

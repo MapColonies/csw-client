@@ -1,6 +1,6 @@
 {
   "name": "@map-colonies/csw-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TypeScript and JavaScript classes for osm elements",
   "main": "./dist/index.js",
   "scripts": {
@@ -19,7 +19,8 @@
     "build": "tsc --project tsconfig.build.json",
     "start": "npm run build && cd dist && node ./index.js",
     "clean": "rimraf dist",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build && npm run copy:patches",
+    "copy:patches": "copyfiles ./patches/* ./dist"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
   ],
   "homepage": "https://github.com/MapColonies/csw-client#readme",
   "dependencies": {
+    "copyfiles": "2.3.0",
     "jsonix": "~2.3.2",
     "ogc-schemas": "^2.6.1",
     "patch-package": "^6.2.2",
