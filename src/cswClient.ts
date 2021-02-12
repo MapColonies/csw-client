@@ -143,8 +143,6 @@ export class CswClient {
     // finalize request body
     const getRecords = this._GetRecords(start, max, query, outputSchema);
     return this._httpPost(getRecords).then(async (resp: IResponse) => {
-      // return Promise.resolve(resp.data);
-
       let res: any = {};
       // eslint-disable-next-line
       toJson(resp.data, (err: any, result: any) => {
