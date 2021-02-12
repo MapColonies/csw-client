@@ -11,6 +11,33 @@ const ISO19139_SRV_20060504 = require('ogc-schemas').ISO19139_SRV_20060504;
 const GML_3_2_0 = require('ogc-schemas').GML_3_2_0;
 /* eslint-enable */
 
+const GET_RECORDS_RESPONSE = `
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mc="http://schema.mapcolonies.com" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+    <csw:SearchStatus timestamp="2021-02-12T11:49:23Z"/><csw:SearchResults numberOfRecordsMatched="2" numberOfRecordsReturned="2" nextRecord="0" recordSchema="http://schema.mapcolonies.com" elementSet="full">
+        <mc:MCGCRecord><ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2"><ows:LowerCorner>31.9042863434239 34.8076891807199</ows:LowerCorner><ows:UpperCorner>31.9118071956932 34.816135996859</ows:UpperCorner></ows:BoundingBox><mc:geojson>{
+            type: 'Polygon',
+            coordinates: [[
+                [34.8076891807199, 31.9042863434239],
+                [34.816135996859, 31.9042863434239],
+                [34.816135996859,31.9118071956932],
+                [34.8076891807199,31.9118071956932],
+                [34.8076891807199,31.9042863434239]
+            ]]
+            }</mc:geojson><mc:id>1</mc:id><mc:URI scheme="XYZ_LAYER">https://tiles.openaerialmap.org/5a852c072553e6000ce5ac8d/0/7950e2de-5d9e-49aa-adec-6e92384be0b9/{z}/{x}/{y}.png</mc:URI><mc:name>Weizmann Institute of Science (Rehovot, Israel)</mc:name></mc:MCGCRecord><mc:MCGCRecord><ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2"><ows:LowerCorner>31.9061345394902 34.8099445223518</ows:LowerCorner><ows:UpperCorner>31.9106311613979 34.8200994167574</ows:UpperCorner></ows:BoundingBox><mc:geojson>{
+            type: 'Polygon',
+            coordinates: [[
+                [34.8076891807199, 31.9042863434239],
+                [34.816135996859, 31.9042863434239],
+                [34.816135996859,31.9118071956932],
+                [34.8076891807199,31.9118071956932],
+                [34.8076891807199,31.9042863434239]
+            ]]
+            }</mc:geojson><mc:id>2</mc:id><mc:URI scheme="XYZ_LAYER">https://tiles.openaerialmap.org/5a9f90c42553e6000ce5ad6c/0/eee1a570-128e-4947-9ffa-1e69c1efab7c/{z}/{x}/{y}.png</mc:URI><mc:name>Weizmann Institute of Science</mc:name>
+        </mc:MCGCRecord>
+    </csw:SearchResults>
+</csw:GetRecordsResponse>
+`;
+
 export const NEW_RECORD_XML = `
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <gmd:MD_Metadata xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -285,33 +312,6 @@ export const NEW_RECORD_XML = `
         </gmd:DQ_DataQuality>
     </gmd:dataQualityInfo>
 </gmd:MD_Metadata>
-`;
-
-const GET_RECORDS_RESPONSE = `
-<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mc="http://schema.mapcolonies.com" version="2.0.2" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
-    <csw:SearchStatus timestamp="2021-02-12T11:49:23Z"/><csw:SearchResults numberOfRecordsMatched="2" numberOfRecordsReturned="2" nextRecord="0" recordSchema="http://schema.mapcolonies.com" elementSet="full">
-        <mc:MCGCRecord><ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2"><ows:LowerCorner>31.9042863434239 34.8076891807199</ows:LowerCorner><ows:UpperCorner>31.9118071956932 34.816135996859</ows:UpperCorner></ows:BoundingBox><mc:geojson>{
-            type: 'Polygon',
-            coordinates: [[
-                [34.8076891807199, 31.9042863434239],
-                [34.816135996859, 31.9042863434239],
-                [34.816135996859,31.9118071956932],
-                [34.8076891807199,31.9118071956932],
-                [34.8076891807199,31.9042863434239]
-            ]]
-            }</mc:geojson><mc:id>1</mc:id><mc:URI scheme="XYZ_LAYER">https://tiles.openaerialmap.org/5a852c072553e6000ce5ac8d/0/7950e2de-5d9e-49aa-adec-6e92384be0b9/{z}/{x}/{y}.png</mc:URI><mc:name>Weizmann Institute of Science (Rehovot, Israel)</mc:name></mc:MCGCRecord><mc:MCGCRecord><ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2"><ows:LowerCorner>31.9061345394902 34.8099445223518</ows:LowerCorner><ows:UpperCorner>31.9106311613979 34.8200994167574</ows:UpperCorner></ows:BoundingBox><mc:geojson>{
-            type: 'Polygon',
-            coordinates: [[
-                [34.8076891807199, 31.9042863434239],
-                [34.816135996859, 31.9042863434239],
-                [34.816135996859,31.9118071956932],
-                [34.8076891807199,31.9118071956932],
-                [34.8076891807199,31.9042863434239]
-            ]]
-            }</mc:geojson><mc:id>2</mc:id><mc:URI scheme="XYZ_LAYER">https://tiles.openaerialmap.org/5a9f90c42553e6000ce5ad6c/0/eee1a570-128e-4947-9ffa-1e69c1efab7c/{z}/{x}/{y}.png</mc:URI><mc:name>Weizmann Institute of Science</mc:name>
-        </mc:MCGCRecord>
-    </csw:SearchResults>
-</csw:GetRecordsResponse>
 `;
 
 // Mock/spy httpTransport function to avoid actual call and trace calls

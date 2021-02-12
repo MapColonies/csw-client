@@ -145,12 +145,14 @@ export class CswClient {
     return this._httpPost(getRecords).then(async (resp: IResponse) => {
       // return Promise.resolve(resp.data);
 
-      let res ={};
-      toJson(resp.data,function (err: any, result: any) {
+      let res: any = {};
+      // eslint-disable-next-line
+      toJson(resp.data, (err: any, result: any) => {
+        // eslint-disable-next-line
         res = result;
       });
-      return Promise.resolve((res as any)['csw:GetRecordsResponse']['csw:SearchResults'][0]);
-
+      // eslint-disable-next-line
+      return Promise.resolve(res['csw:GetRecordsResponse']['csw:SearchResults'][0]);
 
       // TODO: parse returned XML, currently mapcolonies schema not defined
       /*

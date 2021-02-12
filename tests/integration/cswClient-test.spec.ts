@@ -371,7 +371,7 @@ describe('CSW Client', () => {
     };
     const csw = getCswClient();
     await csw.GetRecords(1, 10, options, 'http://schema.mapcolonies.com').then((data) => {
-    expect(data).toHaveProperty('mc:MCGCRecord');
+      expect(data).toHaveProperty('mc:MCGCRecord');
     });
   });
 
