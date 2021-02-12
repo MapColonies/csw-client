@@ -325,7 +325,7 @@ const getCswClient = () => {
     credentials: {},
   };
 
-  return new CswClient('http://127.0.0.1:56477/?version=2.0.2&service=CSW', myRequest, cswConfig);
+  return new CswClient('http://127.0.0.1:50571/?version=2.0.2&service=CSW', myRequest, cswConfig);
 };
 
 describe('CSW Client', () => {
@@ -363,15 +363,15 @@ describe('CSW Client', () => {
             ulon: 34.810811,
           },
         },
-        {
-          field: 'mcgc:name',
-          like: 'Rehovot',
-        },
+        // {
+        //   field: 'mcgc:name',
+        //   like: 'Rehovot',
+        // },
       ],
     };
     const csw = getCswClient();
     await csw.GetRecords(1, 10, options, 'http://schema.mapcolonies.com').then((data) => {
-      expect(data).toContain('mc:MCGCRecord');
+    expect(data).toHaveProperty('mc:MCGCRecord');
     });
   });
 

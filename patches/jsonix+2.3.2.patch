@@ -21,7 +21,7 @@ index d967c5a..e2b3876 100644
 -		{
 +		if (!process.browser) { // patched by @map-colonies/csw-client
 +			// Load the define function via amdefine
-+			define = require('amdefine')(module);
++			const define = require('amdefine')(module);
  			// Require xmldom, xmlhttprequest and fs
  			define(["xmldom", "xmlhttprequest", "fs"], _jsonix_factory);
  		}

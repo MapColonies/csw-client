@@ -11,6 +11,8 @@ const BETWEEN_FILTER_TOOPLE_LENGTH = 2;
 const jsonix = require('jsonix').Jsonix;
 // eslint-disable-next-line
 const xmlserializer = require('xmlserializer');
+// eslint-disable-next-line
+const toJson = require('xml2js').parseString;
 
 export class CswClient {
   private readonly version: string;
@@ -141,7 +143,14 @@ export class CswClient {
     // finalize request body
     const getRecords = this._GetRecords(start, max, query, outputSchema);
     return this._httpPost(getRecords).then(async (resp: IResponse) => {
-      return Promise.resolve(resp.data);
+      // return Promise.resolve(resp.data);
+
+      let res ={};
+      toJson(resp.data,function (err: any, result: any) {
+        res = result;
+      });
+      return Promise.resolve((res as any)['csw:GetRecordsResponse']['csw:SearchResults'][0]);
+
 
       // TODO: parse returned XML, currently mapcolonies schema not defined
       /*
