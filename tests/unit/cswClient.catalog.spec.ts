@@ -90,7 +90,7 @@ describe('CSW Client Catalog related', () => {
       const csw = getCswClient(false);
       await csw.GetRecords(1, 10, {}, 'kukuschema').then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
-        expect(data).toBe('Value');
+        expect(data).toHaveProperty('mc:MCGCRecord');
       });
     });
 
@@ -101,7 +101,7 @@ describe('CSW Client Catalog related', () => {
       };
       await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
-        expect(data).toBe('Value');
+        expect(data).toHaveProperty('mc:MCGCRecord');
       });
     });
 
@@ -126,7 +126,7 @@ describe('CSW Client Catalog related', () => {
       };
       await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
-        expect(data).toBe('Value');
+        expect(data).toHaveProperty('mc:MCGCRecord');
       });
     });
 
@@ -157,7 +157,7 @@ describe('CSW Client Catalog related', () => {
       };
       await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
-        expect(data).toBe('Value');
+        expect(data).toHaveProperty('mc:MCGCRecord');
       });
     });
 
@@ -210,7 +210,7 @@ describe('CSW Client Catalog related', () => {
       };
       await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
-        expect(data).toBe('Value');
+        expect(data).toHaveProperty('mc:MCGCRecord');
       });
     });
   });
