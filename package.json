@@ -1,6 +1,6 @@
 {
   "name": "@map-colonies/csw-client",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "TypeScript and JavaScript classes for osm elements",
   "main": "./dist/index.js",
   "scripts": {
