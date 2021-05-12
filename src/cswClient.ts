@@ -1,7 +1,8 @@
 import { FilterBuilder } from './filterBuilder';
 import { SortBuilder } from './sortBuilder';
 import { CSW_VERSION, DEFAUL_SCHEMAS, DEFAULT_NAMESPACES, DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS } from './defaults';
-import { IRequestExecutor, ICSWConfig, FilterField, ICapabilities, SortField, IResponse } from './models/interfaces';
+import { IRequestExecutor, ICSWConfig, ICapabilities, IResponse } from './models/interfaces';
+import { FilterField, SortField } from './models/classes';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
