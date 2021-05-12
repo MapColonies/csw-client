@@ -302,7 +302,7 @@ export class CswClient {
 
   private _initJsonixContext(config?: ICSWConfig): void {
     // eslint-disable-next-line
-    this.jsonnixContext = new jsonix.Context([...DEFAUL_SCHEMAS, ...config?.schemas ?? []], {
+    this.jsonnixContext = new jsonix.Context([...DEFAUL_SCHEMAS, ...(config?.schemas ?? [])], {
       namespacePrefixes: {
         ...DEFAULT_NAMESPACES.namespacePrefixes,
         ...config?.nameSpaces.namespacePrefixes,
