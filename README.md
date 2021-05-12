@@ -81,7 +81,7 @@ Code samples are provided by TypeScript.
 
     // later in code
     const cswConfig = {
-      schemas: [
+      shemas: [
         GML_3_2_0,
         ISO19139_GCO_20060504,
         ISO19139_GMD_20060504,

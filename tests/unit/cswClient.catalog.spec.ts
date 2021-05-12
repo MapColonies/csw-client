@@ -14,7 +14,6 @@ describe('CSW Client Catalog related', () => {
         .GetCapabilities()
         // eslint-disable-next-line
         .catch((error) => {
-          // eslint-disable-next-line jest/no-conditional-expect
           expect(myRequestFailed).toHaveBeenCalled();
         });
     });
@@ -43,7 +42,6 @@ describe('CSW Client Catalog related', () => {
     it('DescribeRecord():REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
       await csw.DescribeRecord().catch((error) => {
-        // eslint-disable-next-line jest/no-conditional-expect
         expect(myRequestFailed).toHaveBeenCalledTimes(1);
       });
     });
@@ -64,7 +62,6 @@ describe('CSW Client Catalog related', () => {
       const csw = getCswClient(true);
       const domainProperty = 'title';
       await csw.GetDomain(domainProperty).catch((error) => {
-        // eslint-disable-next-line jest/no-conditional-expect
         expect(myRequestFailed).toHaveBeenCalledTimes(1);
       });
     });
@@ -85,7 +82,6 @@ describe('CSW Client Catalog related', () => {
     it('GetRecords():REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
       await csw.GetRecords(1, 10, {}, 'kukuschema').catch((error) => {
-        // eslint-disable-next-line jest/no-conditional-expect
         expect(myRequestFailed).toHaveBeenCalledTimes(1);
       });
     });
@@ -223,7 +219,6 @@ describe('CSW Client Catalog related', () => {
     it('GetRecordsById([]):REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
       await csw.GetRecordsById([]).catch((error) => {
-        // eslint-disable-next-line jest/no-conditional-expect
         expect(myRequestFailed).toHaveBeenCalledTimes(1);
       });
     });
