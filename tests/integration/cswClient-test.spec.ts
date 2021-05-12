@@ -305,7 +305,7 @@ const myRequest = async (url: string, method: string, params: Record<string, unk
 
 const getCswClient = () => {
   const cswConfig = {
-    shemas: [
+    schemas: [
       GML_3_2_0,
       ISO19139_GCO_20060504,
       ISO19139_GMD_20060504,
@@ -370,7 +370,7 @@ describe('CSW Client', () => {
       ],
     };
     const csw = getCswClient();
-    await csw.GetRecords(1, 10, options, 'http://schema.mapcolonies.com').then((data) => {
+    await csw.GetRecords(1, 10, options, 'http://schema.mapcolonies.com/3d').then((data) => {
       expect(data).toHaveProperty('mc:MCGCRecord');
     });
   });
