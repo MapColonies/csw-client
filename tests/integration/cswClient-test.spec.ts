@@ -325,7 +325,7 @@ const getCswClient = () => {
     credentials: {},
   };
 
-  return new CswClient('http://pycsw-web-route-3d.apps.v0h0bdx6.eastus.aroapp.io/pycsw?version=2.0.2&service=CSW', myRequest, cswConfig);
+  return new CswClient('http://127.0.0.1:50571/?version=2.0.2&service=CSW', myRequest, cswConfig);
 };
 
 describe('CSW Client', () => {
