@@ -330,7 +330,7 @@ export const myRequestSuccess = jest.fn(
 
 export const getCswClient = (isFailedRequest: boolean): CswClient => {
   const cswConfig = {
-    shemas: [
+    schemas: [
       GML_3_2_0,
       ISO19139_GCO_20060504,
       ISO19139_GMD_20060504,
