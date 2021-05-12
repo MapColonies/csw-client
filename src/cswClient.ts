@@ -1,7 +1,7 @@
 import { FilterBuilder } from './filterBuilder';
 import { SortBuilder } from './sortBuilder';
 import { CSW_VERSION, DEFAUL_SCHEMAS, DEFAULT_NAMESPACES, DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS } from './defaults';
-import { IRequestExecutor, ICSWConfig, IFilterField, ICapabilities, ISortField, IResponse } from './models/interfaces';
+import { IRequestExecutor, ICSWConfig, FilterField, ICapabilities, SortField, IResponse } from './models/csw';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -26,10 +26,10 @@ export class CswClient {
   private protocols: any[] = [];
   private readonly requestExecutor: IRequestExecutor;
 
-  public constructor(url: string, requestExecutor: IRequestExecutor, config: ICSWConfig) {
+  public constructor(url: string, requestExecutor: IRequestExecutor, config?: ICSWConfig) {
     this.version = CSW_VERSION;
 
-    if (config.credentials !== undefined) {
+    if (config?.credentials !== undefined) {
       this.credentials = config.credentials;
     }
     if (url.length === 0) {
@@ -37,7 +37,6 @@ export class CswClient {
     }
     this.url = url;
     this.requestExecutor = requestExecutor;
-
     this._initJsonixContext(config);
     this._initContext();
   }
@@ -115,7 +114,7 @@ export class CswClient {
    * @param {Object} opts          filter or/and sort
    * @param {String} outputSchema  xml schema of returned records
    */
-  public async GetRecords(start: number, max: number, opts: { filter?: IFilterField[]; sort?: ISortField[] }, outputSchema: string): Promise<any> {
+  public async GetRecords(start: number, max: number, opts: { filter?: FilterField[]; sort?: SortField[] }, outputSchema: string): Promise<any> {
     let filter: FilterBuilder | null = null;
     let sort = null;
 
@@ -145,12 +144,12 @@ export class CswClient {
     return this._httpPost(getRecords).then(async (resp: IResponse) => {
       let res: any = {};
       // eslint-disable-next-line
-      toJson(resp.data, (err: any, result: any) => {
+      toJson(resp.data, { explicitArray: false }, (err: any, result: any) => {
         // eslint-disable-next-line
         res = result;
       });
       // eslint-disable-next-line
-      return Promise.resolve(res['csw:GetRecordsResponse']['csw:SearchResults'][0]);
+      return Promise.resolve(res['csw:GetRecordsResponse']['csw:SearchResults']);
 
       // TODO: parse returned XML, currently mapcolonies schema not defined
       /*
@@ -228,9 +227,9 @@ export class CswClient {
 
   /**
    * Operation DeleteRecords
-   * @param {IFilterField[]} filters        delete records due to supplied filters
+   * @param {FilterField[]} filters        delete records due to supplied filters
    */
-  public async DeleteRecords(filters: IFilterField[]): Promise<any> {
+  public async DeleteRecords(filters: FilterField[]): Promise<any> {
     const transactionAction = this._Delete(this.transformFilter(filters));
     const transaction = this._Transaction(transactionAction);
 
@@ -301,14 +300,14 @@ export class CswClient {
     return retData.replace('<?xml version="1.0" encoding="UTF-8" standalone="no"?>', '');
   }
 
-  private _initJsonixContext(config: ICSWConfig): void {
+  private _initJsonixContext(config?: ICSWConfig): void {
     // eslint-disable-next-line
-    this.jsonnixContext = new jsonix.Context([...DEFAUL_SCHEMAS, ...config.shemas], {
+    this.jsonnixContext = new jsonix.Context([...DEFAUL_SCHEMAS, ...(config?.schemas ?? [])], {
       namespacePrefixes: {
         ...DEFAULT_NAMESPACES.namespacePrefixes,
-        ...config.nameSpaces.namespacePrefixes,
+        ...config?.nameSpaces.namespacePrefixes,
       },
-      mappingStyle: config.nameSpaces.mappingStyle ?? DEFAULT_NAMESPACES.mappingStyle,
+      mappingStyle: config?.nameSpaces.mappingStyle ?? DEFAULT_NAMESPACES.mappingStyle,
     });
   }
 
@@ -449,17 +448,17 @@ export class CswClient {
   }
   /* eslint-enable */
 
-  private transformSort(sort: ISortField[]): SortBuilder {
+  private transformSort(sort: SortField[]): SortBuilder {
     const sortBuilder = new SortBuilder();
-    sort.forEach((s: ISortField) => {
+    sort.forEach((s: SortField) => {
       sortBuilder.Sort(s.field, s.desc);
     });
     return sortBuilder;
   }
 
-  private transformFilter(filter: IFilterField[]): FilterBuilder | null {
+  private transformFilter(filter: FilterField[]): FilterBuilder | null {
     let toReturn: FilterBuilder | null = null;
-    filter.forEach((f: IFilterField) => {
+    filter.forEach((f: FilterField) => {
       const filterBuilder = new FilterBuilder().PropertyName(f.field);
       if (f.like !== undefined) {
         filterBuilder.isLike(`%${f.like}%`);
