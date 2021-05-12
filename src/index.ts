@@ -1,2 +1,2 @@
 export * from './cswClient';
-export * from './models/interfaces';
+export * from './models/csw';
