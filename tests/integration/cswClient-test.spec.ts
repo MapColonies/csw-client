@@ -10,7 +10,7 @@ const ISO19139_GTS_20060504 = require('ogc-schemas').ISO19139_GTS_20060504;
 const ISO19139_GSR_20060504 = require('ogc-schemas').ISO19139_GSR_20060504;
 const ISO19139_SRV_20060504 = require('ogc-schemas').ISO19139_SRV_20060504;
 const GML_3_2_0 = require('ogc-schemas').GML_3_2_0;
-/* eslint-enable */
+
 
 const NEW_RECORD_XML = `
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -287,6 +287,7 @@ const NEW_RECORD_XML = `
     </gmd:dataQualityInfo>
 </gmd:MD_Metadata>
 `;
+/* eslint-enable */
 
 const OUTPUT_SCHEMA ='http://schema.mapcolonies.com/raster';
 
@@ -424,6 +425,7 @@ describe('CSW Client', () => {
     });
   });
 
+  /* eslint-disable */
   // it('CRUD methods', async () => {
   //   const csw = getCswClient();
   //   const record = csw.xmlStringToJson(NEW_RECORD_XML);
@@ -437,4 +439,5 @@ describe('CSW Client', () => {
   //     console.log(response);
   //   });
   // });
+  /* eslint-enable */
 });
