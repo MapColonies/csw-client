@@ -84,7 +84,7 @@ describe('CSW Client Catalog related', () => {
   describe('GetRecords()', () => {
     it('GetRecords():REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
-      await csw.GetRecords(1, 10, {}, 'kukuschema').catch((error) => {
+      await csw.GetRecords('kukuschema', 1, 10, {}).catch((error) => {
         // eslint-disable-next-line jest/no-conditional-expect
         expect(myRequestFailed).toHaveBeenCalledTimes(1);
       });
@@ -92,7 +92,7 @@ describe('CSW Client Catalog related', () => {
 
     it('GetRecords():RESOLVE method invokes httpTransport function', async () => {
       const csw = getCswClient(false);
-      await csw.GetRecords(1, 10, {}, 'kukuschema').then((data) => {
+      await csw.GetRecords('kukuschema', 1, 10, {}).then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
         expect(data).toHaveProperty('mc:MCGCRecord');
       });
@@ -103,7 +103,7 @@ describe('CSW Client Catalog related', () => {
       const opt = {
         filter: [],
       };
-      await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
+      await csw.GetRecords('kukuschema', 1, 10, opt).then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
         expect(data).toHaveProperty('mc:MCGCRecord');
       });
@@ -128,7 +128,7 @@ describe('CSW Client Catalog related', () => {
           },
         ],
       };
-      await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
+      await csw.GetRecords('kukuschema', 1, 10, opt).then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
         expect(data).toHaveProperty('mc:MCGCRecord');
       });
@@ -159,7 +159,7 @@ describe('CSW Client Catalog related', () => {
           },
         ],
       };
-      await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
+      await csw.GetRecords('kukuschema', 1, 10, opt).then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
         expect(data).toHaveProperty('mc:MCGCRecord');
       });
@@ -212,7 +212,7 @@ describe('CSW Client Catalog related', () => {
           },
         ],
       };
-      await csw.GetRecords(1, 10, opt, 'kukuschema').then((data) => {
+      await csw.GetRecords('kukuschema', 1, 10, opt).then((data) => {
         expect(myRequestSuccess).toHaveBeenCalled();
         expect(data).toHaveProperty('mc:MCGCRecord');
       });

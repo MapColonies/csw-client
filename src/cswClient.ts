@@ -114,12 +114,12 @@ export class CswClient {
    * @param {Object} opts          filter or/and sort
    * @param {String} outputSchema  xml schema of returned records
    */
-  public async GetRecords(start: number, max: number, opts: { filter?: FilterField[]; sort?: SortField[] }, outputSchema: string): Promise<any> {
+  public async GetRecords(outputSchema: string, start?: number, max?: number, opts?: { filter?: FilterField[]; sort?: SortField[] }): Promise<any> {
     let filter: FilterBuilder | null = null;
     let sort = null;
 
     // build filters
-    if (opts.filter) {
+    if (opts?.filter) {
       filter = this.transformFilter(opts.filter);
       if (filter !== null && this.defaultFilter !== null) {
         filter.and(this.transformFilter(this.defaultFilter));
@@ -129,7 +129,7 @@ export class CswClient {
     }
 
     // build sort
-    if (opts.sort) {
+    if (opts?.sort) {
       if (this.defaultSort !== null) {
         opts.sort = opts.sort.concat(this.defaultSort);
       }
@@ -140,7 +140,7 @@ export class CswClient {
     // build csw query
     const query = this._Query('full', filter ? this._Constraint(filter) : null, sort);
     // finalize request body
-    const getRecords = this._GetRecords(start, max, query, outputSchema);
+    const getRecords = this._GetRecords(outputSchema, start, max, query);
     return this._httpPost(getRecords).then(async (resp: IResponse) => {
       let res: any = {};
       // eslint-disable-next-line
@@ -549,7 +549,7 @@ export class CswClient {
     };
   }
 
-  private _GetRecords(startPosition: number, maxRecords: number, query: any, outputSchema: string) {
+  private _GetRecords(outputSchema: string, startPosition?: number, maxRecords?: number, query?: any) {
     const tmp = {
       'csw:GetRecords': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.GetRecordsType`,

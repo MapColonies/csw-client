@@ -10,7 +10,6 @@ const ISO19139_GTS_20060504 = require('ogc-schemas').ISO19139_GTS_20060504;
 const ISO19139_GSR_20060504 = require('ogc-schemas').ISO19139_GSR_20060504;
 const ISO19139_SRV_20060504 = require('ogc-schemas').ISO19139_SRV_20060504;
 const GML_3_2_0 = require('ogc-schemas').GML_3_2_0;
-/* eslint-enable */
 
 const NEW_RECORD_XML = `
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -287,6 +286,9 @@ const NEW_RECORD_XML = `
     </gmd:dataQualityInfo>
 </gmd:MD_Metadata>
 `;
+/* eslint-enable */
+
+const OUTPUT_SCHEMA = 'http://schema.mapcolonies.com/raster';
 
 // eslint-disable-next-line
 const myRequest = async (url: string, method: string, params: Record<string, unknown>): Promise<any> => {
@@ -351,7 +353,7 @@ describe('CSW Client', () => {
     });
   });
 
-  it('GetRecords() method which returns <mc:MCGCRecord> elements', async () => {
+  it('GetRecords() method which returns <mc:MCRasterRecord> elements call: start, end, fiters', async () => {
     const options = {
       filter: [
         {
@@ -370,8 +372,39 @@ describe('CSW Client', () => {
       ],
     };
     const csw = getCswClient();
-    await csw.GetRecords(1, 10, options, 'http://schema.mapcolonies.com/3d').then((data) => {
-      expect(data).toHaveProperty('mc:MCGCRecord');
+    await csw.GetRecords(OUTPUT_SCHEMA, 1, 10, options).then((data) => {
+      expect(data).toHaveProperty('mc:MCRasterRecord');
+    });
+  });
+
+  it('GetRecords() method which returns <mc:MCRasterRecord> elements call: start, fiters', async () => {
+    const options = {
+      filter: [
+        {
+          field: 'mcgc:geojson',
+          bbox: {
+            llat: 31.9042863434239,
+            llon: 34.8076891807199,
+            ulat: 31.913197,
+            ulon: 34.810811,
+          },
+        },
+        // {
+        //   field: 'mcgc:name',
+        //   like: 'Rehovot',
+        // },
+      ],
+    };
+    const csw = getCswClient();
+    await csw.GetRecords(OUTPUT_SCHEMA, 3, undefined, options).then((data) => {
+      expect(data).toHaveProperty('mc:MCRasterRecord');
+    });
+  });
+
+  it('GetRecords() method which returns <mc:MCRasterRecord> elements call: ALL records', async () => {
+    const csw = getCswClient();
+    await csw.GetRecords(OUTPUT_SCHEMA).then((data) => {
+      expect(data).toHaveProperty('mc:MCRasterRecord');
     });
   });
 
@@ -391,6 +424,7 @@ describe('CSW Client', () => {
     });
   });
 
+  /* eslint-disable */
   // it('CRUD methods', async () => {
   //   const csw = getCswClient();
   //   const record = csw.xmlStringToJson(NEW_RECORD_XML);
@@ -404,4 +438,5 @@ describe('CSW Client', () => {
   //     console.log(response);
   //   });
   // });
+  /* eslint-enable */
 });
