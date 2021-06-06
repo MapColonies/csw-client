@@ -11,7 +11,6 @@ const ISO19139_GSR_20060504 = require('ogc-schemas').ISO19139_GSR_20060504;
 const ISO19139_SRV_20060504 = require('ogc-schemas').ISO19139_SRV_20060504;
 const GML_3_2_0 = require('ogc-schemas').GML_3_2_0;
 
-
 const NEW_RECORD_XML = `
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <gmd:MD_Metadata xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -289,7 +288,7 @@ const NEW_RECORD_XML = `
 `;
 /* eslint-enable */
 
-const OUTPUT_SCHEMA ='http://schema.mapcolonies.com/raster';
+const OUTPUT_SCHEMA = 'http://schema.mapcolonies.com/raster';
 
 // eslint-disable-next-line
 const myRequest = async (url: string, method: string, params: Record<string, unknown>): Promise<any> => {
