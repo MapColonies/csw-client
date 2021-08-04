@@ -142,14 +142,14 @@ export class CswClient {
     // finalize request body
     const getRecords = this._GetRecords(outputSchema, start, max, query);
     return this._httpPost(getRecords).then(async (resp: IResponse) => {
-      let res: Record<string,any> = {};
+      let res: Record<string, any> = {};
       // eslint-disable-next-line
       toJson(resp.data, { explicitArray: false }, (err: any, result: any) => {
         // eslint-disable-next-line
         res = result;
       });
 
-      if(res['csw:GetRecordsResponse'] !== undefined) {
+      if (res['csw:GetRecordsResponse'] !== undefined) {
         // eslint-disable-next-line
         return Promise.resolve(res['csw:GetRecordsResponse']['csw:SearchResults']);
       } else {
@@ -196,15 +196,15 @@ export class CswClient {
     const byIdAction = this._GetRecordsById(outputSchema, id_list);
 
     return this._httpPost(byIdAction).then(async (resp: IResponse) => {
-      let res: Record<string,any> = {};
-      
+      let res: Record<string, any> = {};
+
       // eslint-disable-next-line
       toJson(resp.data, { explicitArray: false }, (err: any, result: any) => {
         // eslint-disable-next-line
         res = result;
       });
 
-      if(res['csw:GetRecordByIdResponse'] !== undefined) {
+      if (res['csw:GetRecordByIdResponse'] !== undefined) {
         // eslint-disable-next-line
         return Promise.resolve(res['csw:GetRecordByIdResponse']);
       } else {
