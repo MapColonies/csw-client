@@ -357,7 +357,11 @@ describe('CSW Client', () => {
     const options = {
       filter: [
         {
-          field: 'mcgc:geojson',
+          field: "mc:type",
+          eq: "RECORD_RASTER"
+        },
+        {
+          field: 'mc:boundingBox',
           bbox: {
             llat: 31.9042863434239,
             llon: 34.8076891807199,
@@ -365,10 +369,10 @@ describe('CSW Client', () => {
             ulon: 34.810811,
           },
         },
-        // {
-        //   field: 'mcgc:name',
-        //   like: 'Rehovot',
-        // },
+        {
+          field: 'mc:productName',
+          like: 'Rehovot',
+        },
       ],
     };
     const csw = getCswClient();
@@ -381,7 +385,7 @@ describe('CSW Client', () => {
     const options = {
       filter: [
         {
-          field: 'mcgc:geojson',
+          field: 'mc:boundingBox',
           bbox: {
             llat: 31.9042863434239,
             llon: 34.8076891807199,
@@ -390,7 +394,7 @@ describe('CSW Client', () => {
           },
         },
         // {
-        //   field: 'mcgc:name',
+        //   field: 'mc:productName',
         //   like: 'Rehovot',
         // },
       ],
@@ -408,11 +412,11 @@ describe('CSW Client', () => {
     });
   });
 
-  it('GetRecordsById() method with fixed ids ["1","2", "5"]', async () => {
+  it('GetRecordsById() method with fixed ids ["6ac605c4-da38-11eb-8d19-0242ac130003","7c6dfeb2-da38-11eb-8d19-0242ac130003", "5"]', async () => {
     const csw = getCswClient();
-    await csw.GetRecordsById(['1', '2', '5']).then((data) => {
+    await csw.GetRecordsById(OUTPUT_SCHEMA,["6ac605c4-da38-11eb-8d19-0242ac130003","7c6dfeb2-da38-11eb-8d19-0242ac130003", "5"]).then((data) => {
       // eslint-disable-next-line
-      expect(data['csw:GetRecordByIdResponse'].abstractRecord).toHaveLength(3);
+      expect(data['mc:MCRasterRecord']).toHaveLength(2);
     });
   });
 

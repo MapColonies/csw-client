@@ -142,14 +142,19 @@ export class CswClient {
     // finalize request body
     const getRecords = this._GetRecords(outputSchema, start, max, query);
     return this._httpPost(getRecords).then(async (resp: IResponse) => {
-      let res: any = {};
+      let res: Record<string,any> = {};
       // eslint-disable-next-line
       toJson(resp.data, { explicitArray: false }, (err: any, result: any) => {
         // eslint-disable-next-line
         res = result;
       });
-      // eslint-disable-next-line
-      return Promise.resolve(res['csw:GetRecordsResponse']['csw:SearchResults']);
+
+      if(res['csw:GetRecordsResponse'] !== undefined) {
+        // eslint-disable-next-line
+        return Promise.resolve(res['csw:GetRecordsResponse']['csw:SearchResults']);
+      } else {
+        return Promise.reject(resp.data);
+      }
 
       // TODO: parse returned XML, currently mapcolonies schema not defined
       /*
@@ -185,12 +190,26 @@ export class CswClient {
   /**
    * Operation GetRecordsById
    * @param {Integer[]} id_list        list of record ids to fetch
+   * @param {String} outputSchema  xml schema of returned records
    */
-  public async GetRecordsById(id_list: string[]): Promise<any> {
-    const byIdAction = this._GetRecordsById(id_list);
+  public async GetRecordsById(outputSchema: string, id_list: string[]): Promise<any> {
+    const byIdAction = this._GetRecordsById(outputSchema, id_list);
 
     return this._httpPost(byIdAction).then(async (resp: IResponse) => {
-      return Promise.resolve(this.xmlStringToJson(resp.data));
+      let res: Record<string,any> = {};
+      
+      // eslint-disable-next-line
+      toJson(resp.data, { explicitArray: false }, (err: any, result: any) => {
+        // eslint-disable-next-line
+        res = result;
+      });
+
+      if(res['csw:GetRecordByIdResponse'] !== undefined) {
+        // eslint-disable-next-line
+        return Promise.resolve(res['csw:GetRecordByIdResponse']);
+      } else {
+        return Promise.reject(resp.data);
+      }
     });
   }
 
@@ -567,8 +586,8 @@ export class CswClient {
     return tmp;
   }
 
-  private _GetRecordsById(ids: string[]) {
-    return {
+  private _GetRecordsById(outputSchema: string, ids: string[]) {
+    const tmp = {
       'csw:GetRecordById': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.GetRecordByIdType`,
         elementSetName: {
@@ -580,6 +599,10 @@ export class CswClient {
         version: CSW_VERSION,
       },
     };
+    if (outputSchema) {
+      (tmp as any)['csw:GetRecordById'].outputSchema = outputSchema;
+    }
+    return tmp;
   }
 
   private _GetDomain(propertyName: string) {

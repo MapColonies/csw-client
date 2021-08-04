@@ -222,7 +222,7 @@ describe('CSW Client Catalog related', () => {
   describe('GetRecordsById()', () => {
     it('GetRecordsById([]):REJECT method invokes httpTransport function', async () => {
       const csw = getCswClient(true);
-      await csw.GetRecordsById([]).catch((error) => {
+      await csw.GetRecordsById('kukuschema', []).catch((error) => {
         // eslint-disable-next-line jest/no-conditional-expect
         expect(myRequestFailed).toHaveBeenCalledTimes(1);
       });
@@ -232,7 +232,7 @@ describe('CSW Client Catalog related', () => {
       const csw = getCswClient(false);
       // eslint-disable-next-line
       const xmlStringToJsonSpy = jest.spyOn(csw, 'xmlStringToJson').mockImplementation((xmlString: string) => ({}));
-      await csw.GetRecordsById(['1', '2']).then((data) => {
+      await csw.GetRecordsById('kukuschema', ['1', '2']).then((data) => {
         expect(myRequestSuccess).toHaveBeenCalledTimes(1);
         expect(xmlStringToJsonSpy).toHaveBeenCalled();
       });
