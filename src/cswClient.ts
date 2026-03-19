@@ -1,7 +1,7 @@
 import { FilterBuilder } from './filterBuilder';
 import { SortBuilder } from './sortBuilder';
 import { CSW_VERSION, DEFAUL_SCHEMAS, DEFAULT_NAMESPACES, DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS } from './defaults';
-import { IRequestExecutor, ICSWConfig, FilterField, ICapabilities, SortField, IResponse } from './models/csw';
+import { IRequestExecutor, ICSWConfig, FilterField, ICapabilities, SortField, IResponse, ResultType } from './models/csw';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -113,8 +113,18 @@ export class CswClient {
    * @param {Integer} max          number of max records to return
    * @param {Object} opts          filter or/and sort
    * @param {String} outputSchema  xml schema of returned records
+   * @param {"results" | "hits" | "validate"} resultType type of result
    */
-  public async GetRecords(outputSchema: string, start?: number, max?: number, opts?: { filter?: FilterField[]; sort?: SortField[] }): Promise<any> {
+  public async GetRecords(
+    outputSchema: string,
+    resultType?: ResultType,
+    start?: number,
+    max?: number,
+    opts?: {
+      filter?: FilterField[];
+      sort?: SortField[]
+    }): Promise<any> {
+
     let filter: FilterBuilder | null = null;
     let sort = null;
 
@@ -140,7 +150,7 @@ export class CswClient {
     // build csw query
     const query = this._Query('full', filter ? this._Constraint(filter) : null, sort);
     // finalize request body
-    const getRecords = this._GetRecords(outputSchema, start, max, query);
+    const getRecords = this._GetRecords(outputSchema, start, max, query, resultType);
     return this._httpPost(getRecords).then(async (resp: IResponse) => {
       let res: Record<string, any> = {};
       // eslint-disable-next-line
@@ -568,14 +578,14 @@ export class CswClient {
     };
   }
 
-  private _GetRecords(outputSchema: string, startPosition?: number, maxRecords?: number, query?: any) {
+  private _GetRecords(outputSchema: string, startPosition?: number, maxRecords?: number, query?: any, resultType: ResultType = ResultType.RESULTS) {
     const tmp = {
       'csw:GetRecords': {
         TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.CSW}.GetRecordsType`,
         abstractQuery: query,
         startPosition: startPosition,
         maxRecords: maxRecords,
-        resultType: 'results',
+        resultType,
         service: 'CSW',
         version: CSW_VERSION,
       },
