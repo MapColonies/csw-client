@@ -122,9 +122,9 @@ export class CswClient {
     max?: number,
     opts?: {
       filter?: FilterField[];
-      sort?: SortField[]
-    }): Promise<any> {
-
+      sort?: SortField[];
+    }
+  ): Promise<any> {
     let filter: FilterBuilder | null = null;
     let sort = null;
 

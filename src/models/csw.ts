@@ -52,5 +52,5 @@ export interface ICapabilities {
 export enum ResultType {
   RESULTS = 'results',
   HITS = 'hits',
-  VALIDATE = 'validate'
+  VALIDATE = 'validate',
 }
