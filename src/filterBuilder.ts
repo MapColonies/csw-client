@@ -266,10 +266,20 @@ export class FilterBuilder {
         throw new Error('Not Implemented yet, another operators');
       }
     } else {
-      // It has two or more previous operators. TODO They must be And Operator fix to accept 'ogc:Or'.
-      // eslint-disable-next-line
+      if (!filterInstance.logicOps['ogc:And']) {
+        const existingOps = filterInstance.logicOps['ogc:Or'] ? [{ 'ogc:Or': filterInstance.logicOps['ogc:Or'] }] : [];
+        filterInstance.logicOps['ogc:And'] = {
+          TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.BinaryLogicOpType`,
+          ops: existingOps,
+        };
+        if (filterInstance.logicOps['ogc:Or']) {
+          delete filterInstance.logicOps['ogc:Or'];
+        }
+      }
+
       filterInstance.logicOps['ogc:And'].ops = filterInstance.logicOps['ogc:And'].ops.concat(filter.getPreviousOperator());
     }
+
     return this;
   }
 

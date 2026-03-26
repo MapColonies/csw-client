@@ -512,7 +512,7 @@ export class CswClient {
       if (toReturn == null) {
         toReturn = filterBuilder;
       } else {
-        // concatenation of filtres (and the default)
+        // concatenation of filters (and the default)
         // eslint-disable-next-line no-lonely-if
         if (f.or === true) {
           toReturn.or(filterBuilder);
