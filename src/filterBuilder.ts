@@ -234,7 +234,7 @@ export class FilterBuilder {
 
   public and(filter: FilterBuilder | null): FilterBuilder {
     // eslint-disable-next-line
-    const filterInstance: any = (this as any)['ogc:Filter'];
+    const filterInstance = (this as any)['ogc:Filter'];
     if (filter === null) {
       return this;
     }
@@ -266,18 +266,24 @@ export class FilterBuilder {
         throw new Error('Not Implemented yet, another operators');
       }
     } else {
-      if (!filterInstance.logicOps['ogc:And']) {
-        const existingOps = filterInstance.logicOps['ogc:Or'] ? [{ 'ogc:Or': filterInstance.logicOps['ogc:Or'] }] : [];
+      if (filterInstance.logicOps?.['ogc:And'] !== undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const ogcOr = filterInstance.logicOps?.['ogc:Or'];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const existingOps = ogcOr !== undefined ? [{ 'ogc:Or': ogcOr }] : [];
         filterInstance.logicOps['ogc:And'] = {
           TYPE_NAME: `${DEFAULT_MAPPED_SCHEMA_VERSIONS_OBJECTS.FILTER}.BinaryLogicOpType`,
           ops: existingOps,
         };
-        if (filterInstance.logicOps['ogc:Or']) {
+        if (filterInstance.logicOps['ogc:Or'] !== undefined) {
           delete filterInstance.logicOps['ogc:Or'];
         }
       }
 
-      filterInstance.logicOps['ogc:And'].ops = filterInstance.logicOps['ogc:And'].ops.concat(filter.getPreviousOperator());
+      if (filterInstance.logicOps['ogc:And']?.ops !== undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+        filterInstance.logicOps['ogc:And'].ops = filterInstance.logicOps['ogc:And']?.ops?.concat(filter.getPreviousOperator());
+      }
     }
 
     return this;
@@ -324,6 +330,7 @@ export class FilterBuilder {
     return this;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public BBOX(llat: number, llon: number, ulat: number, ulon: number, srsName?: string): FilterBuilder {
     // eslint-disable-next-line
     (this as any)['ogc:Filter'].spatialOps = {
