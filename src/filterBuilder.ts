@@ -266,7 +266,7 @@ export class FilterBuilder {
         throw new Error('Not Implemented yet, another operators');
       }
     } else {
-      if (filterInstance.logicOps?.['ogc:And'] !== undefined) {
+      if (filterInstance.logicOps?.['ogc:And'] === undefined) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const ogcOr = filterInstance.logicOps?.['ogc:Or'];
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -280,10 +280,8 @@ export class FilterBuilder {
         }
       }
 
-      if (filterInstance.logicOps['ogc:And']?.ops !== undefined) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-        filterInstance.logicOps['ogc:And'].ops = filterInstance.logicOps['ogc:And']?.ops?.concat(filter.getPreviousOperator());
-      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+      filterInstance.logicOps['ogc:And'].ops = filterInstance.logicOps['ogc:And']?.ops?.concat(filter.getPreviousOperator());
     }
 
     return this;
