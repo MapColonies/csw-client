@@ -123,7 +123,7 @@ export class CswClient {
       filter?: FilterField[];
       sort?: SortField[];
     },
-    resultType?: ResultType,
+    resultType?: ResultType
   ): Promise<any> {
     let filter: FilterBuilder | null = null;
     let sort = null;
