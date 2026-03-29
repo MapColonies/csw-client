@@ -117,13 +117,13 @@ export class CswClient {
    */
   public async GetRecords(
     outputSchema: string,
-    resultType?: ResultType,
     start?: number,
     max?: number,
     opts?: {
       filter?: FilterField[];
       sort?: SortField[];
-    }
+    },
+    resultType?: ResultType,
   ): Promise<any> {
     let filter: FilterBuilder | null = null;
     let sort = null;
