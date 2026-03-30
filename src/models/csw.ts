@@ -48,3 +48,9 @@ export interface ICapabilities {
   operationsMetadata: Record<string, unknown> | null;
   filterCapabilities: Record<string, unknown> | null;
 }
+
+export enum ResultType {
+  RESULTS = 'results',
+  HITS = 'hits',
+  VALIDATE = 'validate',
+}
