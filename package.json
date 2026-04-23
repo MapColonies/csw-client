@@ -1,7 +1,7 @@
 {
   "name": "@map-colonies/csw-client",
   "version": "1.2.2",
-  "description": "TypeScript and JavaScript classes for osm elements",
+  "description": "TypeScript and JavaScript classes for working with CSW simplified interfacing",
   "main": "./dist/index.js",
   "scripts": {
     "postinstall": "patch-package",
