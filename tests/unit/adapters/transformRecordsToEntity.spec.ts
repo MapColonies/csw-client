@@ -50,11 +50,7 @@ describe('transformRecordsToEntity', () => {
   });
 
   it('maps python-style booleans to JS booleans', () => {
-    const [record] = transformRecordsToEntity(
-      [{ 'mc:type': RecordType.RECORD_RASTER, 'mc:hasTerrain': 'True' }],
-      PY_CSW_KEYS,
-      mcCswFieldRules
-    );
+    const [record] = transformRecordsToEntity([{ 'mc:type': RecordType.RECORD_RASTER, 'mc:hasTerrain': 'True' }], PY_CSW_KEYS, mcCswFieldRules);
 
     expect(record.hasTerrain).toBe(true);
   });
@@ -92,27 +88,15 @@ describe('transformRecordsToEntity', () => {
   });
 
   it('only JSON-parses discretes for raster records', () => {
-    const [rasterRecord] = transformRecordsToEntity(
-      [{ 'mc:type': RecordType.RECORD_RASTER, 'mc:discretes': '[1,2]' }],
-      PY_CSW_KEYS,
-      mcCswFieldRules
-    );
-    const [demRecord] = transformRecordsToEntity(
-      [{ 'mc:type': RecordType.RECORD_DEM, 'mc:discretes': '[1,2]' }],
-      PY_CSW_KEYS,
-      mcCswFieldRules
-    );
+    const [rasterRecord] = transformRecordsToEntity([{ 'mc:type': RecordType.RECORD_RASTER, 'mc:discretes': '[1,2]' }], PY_CSW_KEYS, mcCswFieldRules);
+    const [demRecord] = transformRecordsToEntity([{ 'mc:type': RecordType.RECORD_DEM, 'mc:discretes': '[1,2]' }], PY_CSW_KEYS, mcCswFieldRules);
 
     expect(rasterRecord.discretes).toEqual([1, 2]);
     expect(demRecord.discretes).toBeUndefined();
   });
 
   it('stringifies productVersion only for 3D records', () => {
-    const [threeDRecord] = transformRecordsToEntity(
-      [{ 'mc:type': RecordType.RECORD_3D, 'mc:productVersion': 1.5 }],
-      PY_CSW_KEYS,
-      mcCswFieldRules
-    );
+    const [threeDRecord] = transformRecordsToEntity([{ 'mc:type': RecordType.RECORD_3D, 'mc:productVersion': 1.5 }], PY_CSW_KEYS, mcCswFieldRules);
     const [rasterRecord] = transformRecordsToEntity(
       [{ 'mc:type': RecordType.RECORD_RASTER, 'mc:productVersion': 1.5 }],
       PY_CSW_KEYS,
