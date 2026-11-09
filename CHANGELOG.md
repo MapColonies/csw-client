@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/MapColonies/csw-client/compare/v1.2.3...v1.3.0) (2026-11-09)
+
+
+### Features
+
+* mc adapter ([#11](https://github.com/MapColonies/csw-client/issues/11)) ([135a5bf](https://github.com/MapColonies/csw-client/commit/135a5bf8ecca5aa0259f8f93f2b81a4efc9be2cc))
+
 ### [1.2.3](https://github.com/MapColonies/csw-client/compare/v1.2.2...v1.2.3) (2026-04-23)
 
 ### [1.2.2](https://github.com/MapColonies/csw-client/compare/v1.2.1...v1.2.2) (2026-03-30)
