@@ -20,7 +20,7 @@ const PY_CSW_KEYS = [
 
 describe('transformRecordsToEntity', () => {
   it('renames xml-element keys to their mapped prop names', () => {
-    const [record] = transformRecordsToEntity<Record<string, unknown>>(
+    const [record] = transformRecordsToEntity(
       [{ 'mc:id': '1', 'mc:type': RecordType.RECORD_RASTER, unmapped: 'kept' }],
       PY_CSW_KEYS,
       mcCswFieldRules
@@ -30,7 +30,7 @@ describe('transformRecordsToEntity', () => {
   });
 
   it('JSON-parses the footprint field', () => {
-    const [record] = transformRecordsToEntity<Record<string, unknown>>(
+    const [record] = transformRecordsToEntity(
       [{ 'mc:type': RecordType.RECORD_RASTER, 'mc:footprint': '{"type":"Polygon"}' }],
       PY_CSW_KEYS,
       mcCswFieldRules
@@ -40,7 +40,7 @@ describe('transformRecordsToEntity', () => {
   });
 
   it('casts date fields to Date instances', () => {
-    const [record] = transformRecordsToEntity<Record<string, unknown>>(
+    const [record] = transformRecordsToEntity(
       [{ 'mc:type': RecordType.RECORD_RASTER, 'mc:creationDate': '2020-01-01T00:00:00.000Z' }],
       PY_CSW_KEYS,
       mcCswFieldRules
@@ -50,7 +50,7 @@ describe('transformRecordsToEntity', () => {
   });
 
   it('maps python-style booleans to JS booleans', () => {
-    const [record] = transformRecordsToEntity<Record<string, unknown>>(
+    const [record] = transformRecordsToEntity(
       [{ 'mc:type': RecordType.RECORD_RASTER, 'mc:hasTerrain': 'True' }],
       PY_CSW_KEYS,
       mcCswFieldRules
@@ -60,10 +60,11 @@ describe('transformRecordsToEntity', () => {
   });
 
   it('builds link models from raw pycsw link elements', () => {
-    const [record] = transformRecordsToEntity<Record<string, unknown>>(
+    const [record] = transformRecordsToEntity(
       [
         {
           'mc:type': RecordType.RECORD_RASTER,
+          // eslint-disable-next-line @typescript-eslint/naming-convention -- `$`/`_` are xml2js's fixed attribute/text-content keys
           'mc:links': { $: { scheme: 'WMS', name: 'n', description: 'd' }, _: 'http://example.com' },
         },
       ],
@@ -75,12 +76,12 @@ describe('transformRecordsToEntity', () => {
   });
 
   it('only JSON-parses layerPolygonParts for raster/DEM records', () => {
-    const [rasterRecord] = transformRecordsToEntity<Record<string, unknown>>(
+    const [rasterRecord] = transformRecordsToEntity(
       [{ 'mc:type': RecordType.RECORD_RASTER, 'mc:layerPolygonParts': '{"a":1}' }],
       PY_CSW_KEYS,
       mcCswFieldRules
     );
-    const [threeDRecord] = transformRecordsToEntity<Record<string, unknown>>(
+    const [threeDRecord] = transformRecordsToEntity(
       [{ 'mc:type': RecordType.RECORD_3D, 'mc:layerPolygonParts': '{"a":1}' }],
       PY_CSW_KEYS,
       mcCswFieldRules
@@ -91,12 +92,12 @@ describe('transformRecordsToEntity', () => {
   });
 
   it('only JSON-parses discretes for raster records', () => {
-    const [rasterRecord] = transformRecordsToEntity<Record<string, unknown>>(
+    const [rasterRecord] = transformRecordsToEntity(
       [{ 'mc:type': RecordType.RECORD_RASTER, 'mc:discretes': '[1,2]' }],
       PY_CSW_KEYS,
       mcCswFieldRules
     );
-    const [demRecord] = transformRecordsToEntity<Record<string, unknown>>(
+    const [demRecord] = transformRecordsToEntity(
       [{ 'mc:type': RecordType.RECORD_DEM, 'mc:discretes': '[1,2]' }],
       PY_CSW_KEYS,
       mcCswFieldRules
@@ -107,12 +108,12 @@ describe('transformRecordsToEntity', () => {
   });
 
   it('stringifies productVersion only for 3D records', () => {
-    const [threeDRecord] = transformRecordsToEntity<Record<string, unknown>>(
+    const [threeDRecord] = transformRecordsToEntity(
       [{ 'mc:type': RecordType.RECORD_3D, 'mc:productVersion': 1.5 }],
       PY_CSW_KEYS,
       mcCswFieldRules
     );
-    const [rasterRecord] = transformRecordsToEntity<Record<string, unknown>>(
+    const [rasterRecord] = transformRecordsToEntity(
       [{ 'mc:type': RecordType.RECORD_RASTER, 'mc:productVersion': 1.5 }],
       PY_CSW_KEYS,
       mcCswFieldRules
@@ -124,7 +125,7 @@ describe('transformRecordsToEntity', () => {
 
   it('allows overriding field rules without forking the base ruleset', () => {
     const customRules = extendFieldRules(mcCswFieldRules, { isBoolean: (fieldName) => fieldName === 'customFlag' });
-    const [record] = transformRecordsToEntity<Record<string, unknown>>(
+    const [record] = transformRecordsToEntity(
       [{ 'mc:type': RecordType.RECORD_RASTER, 'mc:hasTerrain': 'True', customFlag: 'False' }],
       PY_CSW_KEYS,
       customRules
@@ -144,6 +145,7 @@ describe('renamePycswKeys', () => {
 
 describe('toLinkModel', () => {
   it('reads protocol/name/description/url off the xml2js link shape', () => {
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- `$`/`_` are xml2js's fixed attribute/text-content keys
     expect(toLinkModel({ $: { scheme: 'WMS', name: 'n', description: 'd' }, _: 'http://example.com' })).toEqual({
       protocol: 'WMS',
       name: 'n',
